@@ -267,3 +267,4 @@ def serve_dashboard():
     return "<h1>AEGIS Mission Control Dashboard loading...</h1>"
 
 # Telemetry pipeline verified
+# Background telemetry daemon enabled
