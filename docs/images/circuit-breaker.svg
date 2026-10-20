@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 490" width="100%" height="100%">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 520" width="100%" height="100%">
   <defs>
     <linearGradient id="cbBg" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="#090d1a"/>
@@ -17,161 +17,161 @@
   </defs>
 
   <style>
-    .cb-title { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-weight: 800; font-size: 24px; fill: #ffffff; letter-spacing: 0.8px; }
-    .cb-subtitle { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-weight: 600; font-size: 13px; fill: #94a3b8; letter-spacing: 0.5px; }
-    .card-head { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-weight: 700; font-size: 15px; fill: #f8fafc; }
-    .card-sub { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-weight: 600; font-size: 12px; fill: #38bdf8; }
-    .card-txt { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-weight: 400; font-size: 12px; fill: #cbd5e1; }
-    .badge-label { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-weight: 700; font-size: 11px; }
-    .code-pill { font-family: 'JetBrains Mono', Consolas, monospace; font-size: 11px; font-weight: 600; }
+    .cb-title { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-weight: 800; font-size: 26px; fill: #ffffff; letter-spacing: 0.8px; }
+    .cb-subtitle { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-weight: 600; font-size: 15px; fill: #94a3b8; letter-spacing: 0.5px; }
+    .card-head { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-weight: 700; font-size: 17px; fill: #f8fafc; }
+    .card-sub { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-weight: 600; font-size: 14px; fill: #38bdf8; }
+    .card-txt { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-weight: 400; font-size: 13.5px; fill: #cbd5e1; }
+    .badge-label { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-weight: 700; font-size: 12px; }
+    .code-pill { font-family: 'JetBrains Mono', Consolas, monospace; font-size: 12.5px; font-weight: 600; }
   </style>
 
   <!-- Container -->
-  <rect width="1080" height="490" rx="16" fill="url(#cbBg)"/>
-  <rect width="1080" height="490" rx="16" fill="none" stroke="#334155" stroke-width="2"/>
+  <rect width="1080" height="520" rx="16" fill="url(#cbBg)"/>
+  <rect width="1080" height="520" rx="16" fill="none" stroke="#334155" stroke-width="2"/>
 
   <!-- Subtle Architectural Grid -->
   <g opacity="0.04">
     <path d="M 0,70 L 1080,70 M 0,140 L 1080,140 M 0,210 L 1080,210 M 0,280 L 1080,280 M 0,350 L 1080,350 M 0,420 L 1080,420" stroke="#00f2fe" stroke-width="1.5"/>
-    <path d="M 70,0 L 70,490 M 140,0 L 140,490 M 210,0 L 210,490 M 280,0 L 280,490 M 350,0 L 350,490 M 420,0 L 420,490 M 490,0 L 490,490 M 560,0 L 560,490 M 630,0 L 630,490 M 700,0 L 700,490 M 770,0 L 770,490 M 840,0 L 840,490 M 910,0 L 910,490 M 980,0 L 980,490" stroke="#00f2fe" stroke-width="1.5"/>
+    <path d="M 70,0 L 70,520 M 140,0 L 140,520 M 210,0 L 210,520 M 280,0 L 280,520 M 350,0 L 350,520 M 420,0 L 420,520 M 490,0 L 490,520 M 560,0 L 560,520 M 630,0 L 630,520 M 700,0 L 700,520 M 770,0 L 770,520 M 840,0 L 840,520 M 910,0 L 910,520 M 980,0 L 980,520" stroke="#00f2fe" stroke-width="1.5"/>
   </g>
 
   <!-- Top Header -->
-  <g transform="translate(40, 28)">
-    <rect x="0" y="0" width="140" height="24" rx="12" fill="#10b981" opacity="0.2"/>
-    <rect x="0" y="0" width="140" height="24" rx="12" fill="none" stroke="#10b981" stroke-width="1.2"/>
-    <text x="70" y="16" class="badge-label" text-anchor="middle" fill="#34d399">⚡ STATE MACHINE</text>
+  <g transform="translate(40, 26)">
+    <rect x="0" y="0" width="145" height="26" rx="13" fill="#10b981" opacity="0.2"/>
+    <rect x="0" y="0" width="145" height="26" rx="13" fill="none" stroke="#10b981" stroke-width="1.2"/>
+    <text x="72" y="17" class="badge-label" text-anchor="middle" fill="#34d399">⚡ STATE MACHINE</text>
 
-    <rect x="150" y="0" width="130" height="24" rx="12" fill="#00f2fe" opacity="0.15"/>
-    <rect x="150" y="0" width="130" height="24" rx="12" fill="none" stroke="#00f2fe" stroke-width="1.2"/>
-    <text x="215" y="16" class="badge-label" text-anchor="middle" fill="#00f2fe">⏱️ 600s WINDOW</text>
+    <rect x="155" y="0" width="135" height="26" rx="13" fill="#00f2fe" opacity="0.15"/>
+    <rect x="155" y="0" width="135" height="26" rx="13" fill="none" stroke="#00f2fe" stroke-width="1.2"/>
+    <text x="222" y="17" class="badge-label" text-anchor="middle" fill="#00f2fe">⏱️ 600s WINDOW</text>
 
-    <rect x="290" y="0" width="135" height="24" rx="12" fill="#8b5cf6" opacity="0.2"/>
-    <rect x="290" y="0" width="135" height="24" rx="12" fill="none" stroke="#8b5cf6" stroke-width="1.2"/>
-    <text x="357" y="16" class="badge-label" text-anchor="middle" fill="#c4b5fd">🛡️ MAX 3 ATTEMPTS</text>
+    <rect x="300" y="0" width="145" height="26" rx="13" fill="#8b5cf6" opacity="0.2"/>
+    <rect x="300" y="0" width="145" height="26" rx="13" fill="none" stroke="#8b5cf6" stroke-width="1.2"/>
+    <text x="372" y="17" class="badge-label" text-anchor="middle" fill="#c4b5fd">🛡️ MAX 3 ATTEMPTS</text>
 
-    <rect x="435" y="0" width="140" height="24" rx="12" fill="#f59e0b" opacity="0.2"/>
-    <rect x="435" y="0" width="140" height="24" rx="12" fill="none" stroke="#f59e0b" stroke-width="1.2"/>
-    <text x="505" y="16" class="badge-label" text-anchor="middle" fill="#fbbf24">⏳ 25s COOLDOWN</text>
+    <rect x="455" y="0" width="145" height="26" rx="13" fill="#f59e0b" opacity="0.2"/>
+    <rect x="455" y="0" width="145" height="26" rx="13" fill="none" stroke="#f59e0b" stroke-width="1.2"/>
+    <text x="527" y="17" class="badge-label" text-anchor="middle" fill="#fbbf24">⏳ 25s COOLDOWN</text>
 
-    <text x="0" y="58" class="cb-title">DISTRIBUTED SRE CIRCUIT BREAKER ENGINE</text>
-    <text x="0" y="78" class="cb-subtitle">FINITE-STATE AUTOMATON PREVENTING CASCADING REMEDIATION FLAPPING &amp; RESTART LOOPS</text>
+    <text x="0" y="60" class="cb-title">DISTRIBUTED SRE CIRCUIT BREAKER ENGINE</text>
+    <text x="0" y="82" class="cb-subtitle">FINITE-STATE AUTOMATON PREVENTING CASCADING REMEDIATION FLAPPING &amp; RESTART LOOPS</text>
     
-    <line x1="0" y1="90" x2="1000" y2="90" stroke="#334155" stroke-width="1.5"/>
+    <line x1="0" y1="94" x2="1000" y2="94" stroke="#334155" stroke-width="1.5"/>
   </g>
 
   <!-- 3 CORE PILLARS: CLOSED (Safe) -> EVALUATOR -> OPEN (Tripped) -->
   
-  <!-- Pillar 1: CLOSED STATE (Left: x=40, y=135, width=290, height=200) -->
+  <!-- Pillar 1: CLOSED STATE (Left: width=300, height=220) -->
   <g transform="translate(40, 130)">
-    <rect width="295" height="205" rx="12" fill="url(#cardGradCb)" stroke="#10b981" stroke-width="2" filter="url(#cbShadow)"/>
-    <rect x="0" y="0" width="295" height="34" rx="12" fill="#10b981" opacity="0.2"/>
-    <text x="16" y="22" class="card-head" fill="#34d399">1. CLOSED (Normal Operation)</text>
-    <rect x="220" y="7" width="65" height="20" rx="10" fill="#10b981"/>
-    <text x="252" y="21" class="badge-label" text-anchor="middle" fill="#fff">ACTIVE</text>
+    <rect width="300" height="220" rx="12" fill="url(#cardGradCb)" stroke="#10b981" stroke-width="2" filter="url(#cbShadow)"/>
+    <rect x="0" y="0" width="300" height="38" rx="12" fill="#10b981" opacity="0.2"/>
+    <text x="16" y="24" class="card-head" fill="#34d399">1. CLOSED (Normal State)</text>
+    <rect x="222" y="8" width="68" height="22" rx="11" fill="#10b981"/>
+    <text x="256" y="23" class="badge-label" text-anchor="middle" fill="#fff">ACTIVE</text>
 
-    <text x="16" y="58" class="card-sub">• Prometheus Alert Intercepted</text>
-    <text x="16" y="78" class="card-txt">Remediation action approved within safety limits.</text>
-    <line x1="16" y1="90" x2="279" y2="90" stroke="#334155" stroke-width="1"/>
+    <text x="16" y="62" class="card-sub">• Prometheus Alert Intercepted</text>
+    <text x="16" y="84" class="card-txt">Remediation action approved within safety limits.</text>
+    <line x1="16" y1="94" x2="284" y2="94" stroke="#334155" stroke-width="1"/>
 
-    <text x="16" y="112" class="card-txt">✔ Evaluates rolling MTTR baseline</text>
-    <text x="16" y="132" class="card-txt">✔ Injects rolling rollout / memory patch</text>
-    <text x="16" y="152" class="card-txt">✔ Active polling validates HTTP 200 probes</text>
+    <text x="16" y="118" class="card-txt">✔ Evaluates rolling MTTR baseline</text>
+    <text x="16" y="140" class="card-txt">✔ Executes rolling rollout or memory patch</text>
+    <text x="16" y="162" class="card-txt">✔ Active polling validates HTTP 200 probes</text>
     
-    <rect x="16" y="168" width="263" height="24" rx="5" fill="#10b981" opacity="0.15"/>
-    <text x="147" y="184" class="code-pill" text-anchor="middle" fill="#34d399">Autonomous Remediation: APPROVED</text>
+    <rect x="16" y="178" width="268" height="28" rx="6" fill="#10b981" opacity="0.15"/>
+    <text x="150" y="196" class="code-pill" text-anchor="middle" fill="#34d399">Autonomous Healing: APPROVED</text>
   </g>
 
   <!-- Flow Arrow from Closed to Gate -->
   <g stroke-linecap="round">
-    <path d="M 335,232 L 375,232" fill="none" stroke="#00f2fe" stroke-width="2.5"/>
-    <polygon points="375,232 367,227 367,237" fill="#00f2fe"/>
+    <path d="M 340,240 L 375,240" fill="none" stroke="#00f2fe" stroke-width="3"/>
+    <polygon points="375,240 366,235 366,245" fill="#00f2fe"/>
   </g>
 
-  <!-- Pillar 2: GUARDRAIL EVALUATION GATE (Center: x=385, y=130, width=310, height=205) -->
-  <g transform="translate(385, 130)">
-    <rect width="310" height="205" rx="12" fill="url(#cardGradCb)" stroke="#00f2fe" stroke-width="2" filter="url(#cbShadow)"/>
-    <rect x="0" y="0" width="310" height="34" rx="12" fill="#00f2fe" opacity="0.15"/>
-    <text x="16" y="22" class="card-head" fill="#00f2fe">2. Guardrail Safety Gate</text>
-    <rect x="230" y="7" width="68" height="20" rx="10" fill="#00f2fe" opacity="0.3"/>
-    <text x="264" y="21" class="badge-label" text-anchor="middle" fill="#00f2fe">AUDIT</text>
+  <!-- Pillar 2: GUARDRAIL EVALUATION GATE (Center: width=320, height=220) -->
+  <g transform="translate(380, 130)">
+    <rect width="320" height="220" rx="12" fill="url(#cardGradCb)" stroke="#00f2fe" stroke-width="2" filter="url(#cbShadow)"/>
+    <rect x="0" y="0" width="320" height="38" rx="12" fill="#00f2fe" opacity="0.15"/>
+    <text x="16" y="24" class="card-head" fill="#00f2fe">2. Guardrail Safety Gate</text>
+    <rect x="238" y="8" width="70" height="22" rx="11" fill="#00f2fe" opacity="0.3"/>
+    <text x="273" y="23" class="badge-label" text-anchor="middle" fill="#00f2fe">AUDIT</text>
 
-    <text x="16" y="58" class="card-sub">• Real-Time Constraint Checks:</text>
-    <line x1="16" y1="68" x2="294" y2="68" stroke="#334155" stroke-width="1"/>
+    <text x="16" y="62" class="card-sub">• Real-Time Constraint Validation:</text>
+    <line x1="16" y1="72" x2="304" y2="72" stroke="#334155" stroke-width="1"/>
 
-    <text x="16" y="90" class="card-txt">1. Action Count: &lt; 3 attempts in 10-min window?</text>
-    <text x="16" y="110" class="card-txt">2. Cooldown Guard: &gt;= 25 seconds elapsed?</text>
-    <text x="16" y="130" class="card-txt">3. Node Health: Memory / CPU below crash ceiling?</text>
+    <text x="16" y="96" class="card-txt">1. Action Count: &lt; 3 attempts in 10-min window?</text>
+    <text x="16" y="118" class="card-txt">2. Cooldown Guard: &gt;= 25 seconds elapsed?</text>
+    <text x="16" y="140" class="card-txt">3. Control Plane: Pod metrics stabilizing?</text>
 
     <!-- Branch indicators -->
-    <rect x="16" y="148" width="130" height="44" rx="6" fill="#10b981" opacity="0.15" stroke="#10b981" stroke-width="1"/>
-    <text x="81" y="167" class="code-pill" text-anchor="middle" fill="#34d399">SAFE ➔ Maintain</text>
-    <text x="81" y="183" class="code-pill" text-anchor="middle" fill="#34d399">CLOSED state</text>
+    <rect x="16" y="156" width="138" height="48" rx="8" fill="#10b981" opacity="0.15" stroke="#10b981" stroke-width="1"/>
+    <text x="85" y="177" class="code-pill" text-anchor="middle" fill="#34d399">SAFE ➔ Maintain</text>
+    <text x="85" y="195" class="code-pill" text-anchor="middle" fill="#34d399">CLOSED state</text>
 
-    <rect x="164" y="148" width="130" height="44" rx="6" fill="#ef4444" opacity="0.15" stroke="#ef4444" stroke-width="1"/>
-    <text x="229" y="167" class="code-pill" text-anchor="middle" fill="#f87171">BREACH ➔ Trip to</text>
-    <text x="229" y="183" class="code-pill" text-anchor="middle" fill="#f87171">OPEN state</text>
+    <rect x="166" y="156" width="138" height="48" rx="8" fill="#ef4444" opacity="0.15" stroke="#ef4444" stroke-width="1"/>
+    <text x="235" y="177" class="code-pill" text-anchor="middle" fill="#f87171">BREACH ➔ Trip to</text>
+    <text x="235" y="195" class="code-pill" text-anchor="middle" fill="#f87171">OPEN state</text>
   </g>
 
   <!-- Flow Arrow from Gate to Tripped -->
   <g stroke-linecap="round">
-    <path d="M 695,232 L 735,232" fill="none" stroke="#ef4444" stroke-width="2.5"/>
-    <polygon points="735,232 727,227 727,237" fill="#ef4444"/>
+    <path d="M 700,240 L 735,240" fill="none" stroke="#ef4444" stroke-width="3"/>
+    <polygon points="735,240 726,235 726,245" fill="#ef4444"/>
   </g>
 
-  <!-- Pillar 3: TRIPPED / OPEN STATE (Right: x=745, y=130, width=295, height=205) -->
-  <g transform="translate(745, 130)">
-    <rect width="295" height="205" rx="12" fill="url(#cardGradCb)" stroke="#ef4444" stroke-width="2" filter="url(#cbShadow)"/>
-    <rect x="0" y="0" width="295" height="34" rx="12" fill="#ef4444" opacity="0.2"/>
-    <text x="16" y="22" class="card-head" fill="#f87171">3. OPEN (Tripped / Safety Halt)</text>
-    <rect x="220" y="7" width="65" height="20" rx="10" fill="#ef4444"/>
-    <text x="252" y="21" class="badge-label" text-anchor="middle" fill="#fff">LOCKED</text>
+  <!-- Pillar 3: TRIPPED / OPEN STATE (Right: width=300, height=220) -->
+  <g transform="translate(740, 130)">
+    <rect width="300" height="220" rx="12" fill="url(#cardGradCb)" stroke="#ef4444" stroke-width="2" filter="url(#cbShadow)"/>
+    <rect x="0" y="0" width="300" height="38" rx="12" fill="#ef4444" opacity="0.2"/>
+    <text x="16" y="24" class="card-head" fill="#f87171">3. OPEN (Tripped / Safety Halt)</text>
+    <rect x="224" y="8" width="66" height="22" rx="11" fill="#ef4444"/>
+    <text x="257" y="23" class="badge-label" text-anchor="middle" fill="#fff">LOCKED</text>
 
-    <text x="16" y="58" class="card-sub">• Control Plane Protection Engaged</text>
-    <text x="16" y="78" class="card-txt">Remediation loop terminated to stop cascading failure.</text>
-    <line x1="16" y1="90" x2="279" y2="90" stroke="#334155" stroke-width="1"/>
+    <text x="16" y="62" class="card-sub">• Control Plane Protection Engaged</text>
+    <text x="16" y="84" class="card-txt">Remediation loop terminated to stop cascading failure.</text>
+    <line x1="16" y1="94" x2="284" y2="94" stroke="#334155" stroke-width="1"/>
 
-    <text x="16" y="112" class="card-txt">🛑 Halts automated rolling restarts</text>
-    <text x="16" y="132" class="card-txt">📑 Correlates pod logs &amp; outputs AIOps RCA</text>
-    <text x="16" y="152" class="card-txt">🚨 Dispatches High-Severity Human Alert</text>
+    <text x="16" y="118" class="card-txt">🛑 Halts automated rolling restarts</text>
+    <text x="16" y="140" class="card-txt">📑 Correlates pod logs &amp; outputs AIOps RCA</text>
+    <text x="16" y="162" class="card-txt">🚨 Dispatches High-Severity Human Alert</text>
 
-    <rect x="16" y="168" width="263" height="24" rx="5" fill="#ef4444" opacity="0.15"/>
-    <text x="147" y="184" class="code-pill" text-anchor="middle" fill="#f87171">Automated Action: BLOCKED (Safe)</text>
+    <rect x="16" y="178" width="268" height="28" rx="6" fill="#ef4444" opacity="0.15"/>
+    <text x="150" y="196" class="code-pill" text-anchor="middle" fill="#f87171">Automated Action: BLOCKED (Safe)</text>
   </g>
 
   <!-- Bottom Strip: State Transitions Summary -->
-  <g transform="translate(40, 355)">
-    <rect width="1000" height="105" rx="10" fill="#0f172a" stroke="#334155" stroke-width="1.5"/>
+  <g transform="translate(40, 370)">
+    <rect width="1000" height="115" rx="12" fill="#0f172a" stroke="#334155" stroke-width="1.5"/>
     
     <!-- State 1 Summary -->
-    <g transform="translate(20, 18)">
-      <circle cx="10" cy="10" r="6" fill="#10b981"/>
-      <text x="24" y="14" class="card-head" font-size="13" fill="#34d399">CLOSED (Nominal)</text>
-      <text x="24" y="36" class="card-txt">Automated self-healing active.</text>
-      <text x="24" y="54" class="card-txt">Sub-25s MTTR verified via probes.</text>
-      <text x="24" y="72" class="code-pill" fill="#10b981">Actions: Allowed (Window &lt; 3)</text>
+    <g transform="translate(25, 20)">
+      <circle cx="10" cy="12" r="7" fill="#10b981"/>
+      <text x="26" y="17" class="card-head" font-size="14.5" fill="#34d399">CLOSED (Nominal)</text>
+      <text x="26" y="42" class="card-txt">Automated self-healing active.</text>
+      <text x="26" y="62" class="card-txt">Sub-25s MTTR verified via probes.</text>
+      <text x="26" y="82" class="code-pill" fill="#10b981">Actions: Allowed (Window &lt; 3)</text>
     </g>
 
-    <line x1="330" y1="15" x2="330" y2="90" stroke="#334155" stroke-width="1"/>
+    <line x1="330" y1="16" x2="330" y2="100" stroke="#334155" stroke-width="1"/>
 
     <!-- State 2 Summary -->
-    <g transform="translate(350, 18)">
-      <circle cx="10" cy="10" r="6" fill="#ef4444"/>
-      <text x="24" y="14" class="card-head" font-size="13" fill="#f87171">OPEN (Tripped)</text>
-      <text x="24" y="36" class="card-txt">Anti-flapping guardrail engaged.</text>
-      <text x="24" y="54" class="card-txt">Prevents cluster control plane starvation.</text>
-      <text x="24" y="72" class="code-pill" fill="#f87171">Actions: Blocked (Escalated to On-Call)</text>
+    <g transform="translate(355, 20)">
+      <circle cx="10" cy="12" r="7" fill="#ef4444"/>
+      <text x="26" y="17" class="card-head" font-size="14.5" fill="#f87171">OPEN (Tripped)</text>
+      <text x="26" y="42" class="card-txt">Anti-flapping guardrail engaged.</text>
+      <text x="26" y="62" class="card-txt">Prevents cluster control plane starvation.</text>
+      <text x="26" y="82" class="code-pill" fill="#f87171">Actions: Blocked (Escalated to On-Call)</text>
     </g>
 
-    <line x1="670" y1="15" x2="670" y2="90" stroke="#334155" stroke-width="1"/>
+    <line x1="670" y1="16" x2="670" y2="100" stroke="#334155" stroke-width="1"/>
 
     <!-- State 3 Summary -->
-    <g transform="translate(690, 18)">
-      <circle cx="10" cy="10" r="6" fill="#f59e0b"/>
-      <text x="24" y="14" class="card-head" font-size="13" fill="#fbbf24">HALF-OPEN (Recovery Audit)</text>
-      <text x="24" y="36" class="card-txt">Cooldown elapsed. Single canary test.</text>
-      <text x="24" y="54" class="card-txt">Auto-resets to CLOSED when /healthz passes.</text>
-      <text x="24" y="72" class="code-pill" fill="#fbbf24">Transition: Canary Test ➔ CLOSED</text>
+    <g transform="translate(695, 20)">
+      <circle cx="10" cy="12" r="7" fill="#f59e0b"/>
+      <text x="26" y="17" class="card-head" font-size="14.5" fill="#fbbf24">HALF-OPEN (Recovery Audit)</text>
+      <text x="26" y="42" class="card-txt">Cooldown elapsed. Single canary test.</text>
+      <text x="26" y="62" class="card-txt">Auto-resets to CLOSED when /healthz passes.</text>
+      <text x="26" y="82" class="code-pill" fill="#fbbf24">Transition: Canary Test ➔ CLOSED</text>
     </g>
   </g>
 </svg>
