@@ -1,6 +1,8 @@
 # AEGIS // Autonomous SRE & AIOps Platform
 ### *Autonomous Engineering for Guarded Infrastructure Self-Healing & Incident Intelligence*
 
+[![Live Demo](https://img.shields.io/badge/Live_Demo-Mission_Control-00F2FE?style=for-the-badge&logo=render&logoColor=white)](https://aegis-self-healing-platform.onrender.com)
+
 ![Python](https://img.shields.io/badge/Python-3.11-3776AB?logo=python&logoColor=white)
 ![Kubernetes](https://img.shields.io/badge/Kubernetes-1.29-326CE5?logo=kubernetes&logoColor=white)
 ![Kind](https://img.shields.io/badge/Kind-Local_Cluster-blue)
@@ -12,6 +14,8 @@
 > **Autonomous closed-loop incident response platform.**  
 > Intercepts real-time Prometheus alert webhooks, applies circuit-breaking safety policies, executes automated remediation, verifies health recovery, and generates AIOps post-mortems — **reducing MTTR from 5+ minutes to under 25 seconds.**  
 > Built to run **100% free ($0 AWS spend)** locally via Docker and Kind, with production-grade AWS EKS Terraform modules included.
+
+🔗 **Public Live Demo:** [https://aegis-self-healing-platform.onrender.com](https://aegis-self-healing-platform.onrender.com)
 
 ---
 
