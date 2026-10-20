@@ -145,7 +145,8 @@ aegis-self-healing-platform/
 ├── docs/
 │   └── images/
 │       ├── architecture.svg       # Vector System Architecture Blueprint
-│       └── pipeline.svg           # DevSecOps CI/CD Pipeline Vector Diagram
+│       ├── pipeline.svg           # DevSecOps CI/CD Pipeline Vector Diagram
+│       └── circuit-breaker.svg    # SRE Circuit Breaker Finite State Machine
 ├── k8s/                           # Production Kubernetes Manifests
 │   ├── base/
 │   │   ├── namespace.yaml         # Isolated namespaces (production-apps, aegis-system)
@@ -239,29 +240,53 @@ Every failure archetype in AEGIS is monitored via PromQL, resolved autonomously,
 
 Autonomous remediation requires safeguards against cascading failure loops. If an application contains an unrecoverable bug, continuous remediation attempts will saturate the cluster control plane:
 
-```text
-       [Nominal State]
-              │
-       Alert Intercepted
-              │
-              ▼
-   ┌──────────────────────┐
-   │ Check Circuit State  │
-   └──────────────────────┘
-         /          \
-  Within Limits   Threshold Exceeded (>= 3 attempts in 10m
-  & Cooldown OK   or Cooldown < 25s)
-       /              \
-      ▼                ▼
-[State: CLOSED]   [State: TRIPPED / OPEN]
-Execute Patch      Halt Automated Actions
-Verify Recovery    Emit Critical Alert to Human On-Call
-Log MTTR           Persist Diagnostic Log Dumps
-```
+<p align="center">
+  <img src="docs/images/circuit-breaker.svg" alt="Distributed SRE Circuit Breaker Finite State Machine" width="100%"/>
+</p>
 
-* **Sliding Window:** Tracks remediation events within a 600-second (10-minute) window per resource.
-* **Cooldown Period:** Enforces an absolute 25-second cooldown between successive actions on the same deployment.
-* **Trip Limit:** Halts execution if $\ge 3$ actions occur within the window, protecting cluster stability.
+<details>
+<summary><b>🔍 Click to inspect interactive Mermaid State Machine Source Code</b></summary>
+
+```mermaid
+stateDiagram-v2
+    direction LR
+
+    [*] --> CLOSED : System Initialized
+
+    state CLOSED {
+        [*] --> Monitoring
+        Monitoring --> AlertIntercepted : Alertmanager Webhook
+        AlertIntercepted --> CheckGuardrail : Evaluate Window & Cooldown
+        CheckGuardrail --> ExecuteRemediation : Attempt < 3 AND Cooldown >= 25s
+        ExecuteRemediation --> VerifyHealth : Poll /healthz
+        VerifyHealth --> Monitoring : Probes 200 OK (MTTR Logged)
+    }
+
+    CLOSED --> OPEN : Threshold Exceeded (>= 3 Attempts / 10m)
+    CLOSED --> OPEN : Rapid Flapping (Cooldown < 25s)
+
+    state OPEN {
+        [*] --> HaltActions
+        HaltActions --> CorrelateLogs : Trigger AIOps RCA
+        CorrelateLogs --> AlertHuman : Dispatch On-Call Pager
+    }
+
+    OPEN --> HALF_OPEN : Cooldown Expired (25s Elapsed)
+
+    state HALF_OPEN {
+        [*] --> CanaryProbe
+        CanaryProbe --> HealthCheck : Single Remediation Attempt
+    }
+
+    HALF_OPEN --> CLOSED : Probe Succeeded (100% Ready)
+    HALF_OPEN --> OPEN : Probe Failed (Re-trip Guardrail)
+```
+</details>
+
+* **Sliding Window:** Tracks remediation events within a 600-second (10-minute) sliding window per deployment resource.
+* **Cooldown Safety Lock:** Enforces an absolute 25-second cooldown between successive actions to prevent race conditions.
+* **Trip Limit:** Halts execution if $\ge 3$ actions occur within the window, preserving cluster compute and escalating to on-call engineers.
+
 
 ---
 
