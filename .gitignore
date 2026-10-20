@@ -26,3 +26,8 @@ Desktop.ini
 # Incident audit logs generated during testing (keep directory with .gitkeep)
 reports/*.json
 !reports/.gitkeep
+
+# Executables
+*.exe
+scripts/kind.exe
+
