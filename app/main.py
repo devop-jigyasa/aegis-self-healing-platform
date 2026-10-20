@@ -269,3 +269,4 @@ def serve_dashboard():
 # Telemetry pipeline verified
 # Background telemetry daemon enabled
 # Chaos: /chaos/oom hook certified
+# Chaos: /chaos/crash hook certified
