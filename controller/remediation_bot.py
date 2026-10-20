@@ -8,12 +8,10 @@ import os
 import json
 import time
 import logging
-from typing import Dict, Any, List
+from typing import Dict, Any
 from datetime import datetime
 
-import requests
-from fastapi import FastAPI, Request, status, HTTPException
-from pydantic import BaseModel
+from fastapi import FastAPI, Request
 
 from circuit_breaker import RemediationCircuitBreaker
 from aiops_engine import AIOpsDiagnosticEngine
