@@ -1,0 +1,28 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+venv/
+.env/
+env/
+
+# IDE files
+.vscode/
+.idea/
+
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.*
+.terraform.lock.hcl
+
+# OS specific
+Thumbs.db
+Desktop.ini
+.DS_Store
+
+# Incident audit logs generated during testing (keep directory with .gitkeep)
+reports/*.json
+!reports/.gitkeep
