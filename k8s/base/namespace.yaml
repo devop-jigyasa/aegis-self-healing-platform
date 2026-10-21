@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: aegis-system
+  labels:
+    name: aegis-system
+    app.kubernetes.io/part-of: aegis-platform
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: production-apps
+  labels:
+    name: production-apps
+    app.kubernetes.io/part-of: aegis-platform
