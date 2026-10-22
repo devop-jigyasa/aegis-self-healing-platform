@@ -1,0 +1,16 @@
+global:
+  resolve_timeout: 1m
+
+route:
+  group_by: ['alertname', 'namespace', 'deployment']
+  group_wait: 5s
+  group_interval: 10s
+  repeat_interval: 1h
+  receiver: 'aegis-remediation-webhook'
+
+receivers:
+  - name: 'aegis-remediation-webhook'
+    webhook_configs:
+      - url: 'http://aegis-controller.aegis-system.svc.cluster.local:5000/webhook/alert'
+        send_resolved: true
+        max_alerts: 5
