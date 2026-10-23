@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AEGIS // Autonomous SRE Mission Control</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="ambient-glow cyan-glow"></div>
+    <div class="ambient-glow purple-glow"></div>
+
+    <div class="app-container">
+        <!-- Top Navigation Bar -->
+        <header class="top-nav">
+            <div class="brand">
+                <div class="logo-shield">
+                    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                        <circle cx="12" cy="11" r="3" fill="#00F2FE"/>
+                    </svg>
+                </div>
+                <div class="brand-text">
+                    <span class="project-name">AEGIS</span>
+                    <span class="badge live-badge">CLOSED-LOOP SRE</span>
+                </div>
+            </div>
+
+            <div class="cluster-summary">
+                <div class="node-badge">
+                    <span class="dot pulse-green" id="cluster-indicator"></span>
+                    <span id="hostname-display">k8s-node // aegis-core</span>
+                </div>
+                <div class="uptime-badge">
+                    UPTIME: <span id="uptime-display" class="mono">00:00:00</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Grid Layout -->
+        <main class="dashboard-grid">
+            <!-- Row 1: KPI Telemetry Cards -->
+            <section class="telemetry-row">
+                <div class="card glass-card kpi-card">
+                    <div class="card-header">
+                        <span class="kpi-title">SYSTEM STATUS</span>
+                        <span class="kpi-icon status-icon">●</span>
+                    </div>
+                    <div class="kpi-val" id="health-val">HEALTHY</div>
+                    <div class="kpi-sub">Liveness Probe: <span id="probe-status" class="text-cyan">PASSING</span></div>
+                </div>
+
+                <div class="card glass-card kpi-card">
+                    <div class="card-header">
+                        <span class="kpi-title">RESIDENT MEMORY</span>
+                        <span class="kpi-icon">💾</span>
+                    </div>
+                    <div class="kpi-val mono"><span id="mem-val">0.0</span> <span class="unit">MB</span></div>
+                    <div class="meter-bar">
+                        <div class="meter-fill" id="mem-meter" style="width: 25%;"></div>
+                    </div>
+                </div>
+
+                <div class="card glass-card kpi-card">
+                    <div class="card-header">
+                        <span class="kpi-title">CPU UTILIZATION</span>
+                        <span class="kpi-icon">⚡</span>
+                    </div>
+                    <div class="kpi-val mono"><span id="cpu-val">0.0</span> <span class="unit">%</span></div>
+                    <div class="meter-bar">
+                        <div class="meter-fill meter-cyan" id="cpu-meter" style="width: 10%;"></div>
+                    </div>
+                </div>
+
+                <div class="card glass-card kpi-card highlight-card">
+                    <div class="card-header">
+                        <span class="kpi-title">BENCHMARKED MTTR</span>
+                        <span class="kpi-icon">⏱️</span>
+                    </div>
+                    <div class="kpi-val mono text-cyan"><span id="mttr-val">24.2</span> <span class="unit">SEC</span></div>
+                    <div class="kpi-sub">Recovery Target: <span class="text-green">&lt; 30s</span> (Manual: 5m+)</div>
+                </div>
+            </section>
+
+            <!-- Row 2: Chaos Injection Cockpit + Live Incident Timeline -->
+            <section class="split-row">
+                <!-- Chaos Cockpit -->
+                <div class="card glass-card chaos-cockpit">
+                    <div class="card-banner">
+                        <div class="banner-title">
+                            <span class="alert-pulse"></span>
+                            <h3>CHAOS INJECTION COCKPIT</h3>
+                        </div>
+                        <span class="subtitle">Simulate real production failures and observe autonomous remediation</span>
+                    </div>
+
+                    <div class="chaos-buttons-grid">
+                        <button class="chaos-btn btn-danger" onclick="triggerChaos('oom')">
+                            <div class="btn-icon">💣</div>
+                            <div class="btn-meta">
+                                <strong>Memory Leak (OOM)</strong>
+                                <span>Spike RSS to trigger OOMKill</span>
+                            </div>
+                        </button>
+
+                        <button class="chaos-btn btn-danger" onclick="triggerChaos('crash')">
+                            <div class="btn-icon">💥</div>
+                            <div class="btn-meta">
+                                <strong>CrashLoopBackOff</strong>
+                                <span>Immediate process exit(1)</span>
+                            </div>
+                        </button>
+
+                        <button class="chaos-btn btn-warning" onclick="triggerChaos('cpu')">
+                            <div class="btn-icon">🔥</div>
+                            <div class="btn-meta">
+                                <strong>CPU Stress Spike</strong>
+                                <span>Burn CPU to trigger HPA</span>
+                            </div>
+                        </button>
+
+                        <button class="chaos-btn btn-warning" onclick="triggerChaos('latency')">
+                            <div class="btn-icon">⏳</div>
+                            <div class="btn-meta">
+                                <strong>HTTP Latency Injected</strong>
+                                <span>Add 2.0s delay to requests</span>
+                            </div>
+                        </button>
+
+                        <button class="chaos-btn btn-warning" onclick="triggerChaos('errors')">
+                            <div class="btn-icon">🚨</div>
+                            <div class="btn-meta">
+                                <strong>HTTP 500 Cascade</strong>
+                                <span>Break application routes</span>
+                            </div>
+                        </button>
+
+                        <button class="chaos-btn btn-success" onclick="triggerChaos('reset')">
+                            <div class="btn-icon">✨</div>
+                            <div class="btn-meta">
+                                <strong>Clean / Reset All</strong>
+                                <span>Restore nominal health</span>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Live SRE Remediation Timeline -->
+                <div class="card glass-card timeline-panel">
+                    <div class="panel-header">
+                        <h3>AUTONOMOUS INCIDENT STREAM</h3>
+                        <span class="badge" id="incident-counter">0 ACTIVE INCIDENTS</span>
+                    </div>
+
+                    <div class="timeline-container" id="timeline-list">
+                        <!-- Populated by JS -->
+                        <div class="timeline-item status-nominal">
+                            <div class="time-marker mono">00:00:00</div>
+                            <div class="time-content">
+                                <span class="tag tag-ok">NOMINAL</span>
+                                <p>AEGIS Core platform initialized. Health probes passing. Telemetry streaming active.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Row 3: AIOps Incident Post-Mortem & Intelligence -->
+            <section class="aiops-row">
+                <div class="card glass-card aiops-card">
+                    <div class="panel-header">
+                        <div class="ai-brand">
+                            <span class="ai-sparkle">✦</span>
+                            <h3>AIOps ROOT CAUSE ANALYSIS & DIAGNOSTICS</h3>
+                        </div>
+                        <button class="action-btn" onclick="generateAIMockReport()">RUN AI DIAGNOSTICS</button>
+                    </div>
+
+                    <div class="aiops-output" id="aiops-content">
+                        <div class="empty-state">
+                            <p>No active incidents. AEGIS autonomous watcher is monitoring Prometheus streams and Kubernetes event logs.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer class="footer">
+            <span>AEGIS // Cloud-Native Autonomous SRE & AIOps Platform</span>
+            <span>Zero-Cost Local Kubernetes Architecture (Kind + Prometheus + Python Core)</span>
+        </footer>
+    </div>
+
+    <script src="/static/app.js"></script>
+</body>
+</html>
