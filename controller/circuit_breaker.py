@@ -4,7 +4,7 @@ Prevents remediation flapping, cascading crashes, and infinite retry loops.
 """
 
 import time
-from typing import Dict, Any, Tuple
+from typing import Dict, Tuple
 
 
 class RemediationCircuitBreaker:

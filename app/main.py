@@ -5,7 +5,6 @@ dynamic health/readiness probes, and controlled failure/chaos simulation.
 """
 
 import os
-import sys
 import time
 import socket
 import threading
