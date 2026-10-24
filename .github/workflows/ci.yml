@@ -1,0 +1,74 @@
+name: "AEGIS DevSecOps CI Pipeline"
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+
+jobs:
+  lint-and-validate:
+    name: "Code Quality & Static Analysis"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Install Linting Tools
+        run: |
+          python -m pip install --upgrade pip
+          pip install flake8 black
+
+      - name: Run Flake8 Linter
+        run: |
+          # Stop build if syntax errors or undefined names exist
+          flake8 app/ controller/ --count --select=E9,F63,F7,F82 --show-source --statistics
+
+  security-scan:
+    name: "Trivy Container & Manifest Vulnerability Scan"
+    runs-on: ubuntu-latest
+    needs: lint-and-validate
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Run Trivy Vulnerability Scanner on Manifests
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'config'
+          hide-progress: true
+          format: 'table'
+          severity: 'CRITICAL,HIGH'
+
+  build-containers:
+    name: "Multi-Stage Docker Image Builds"
+    runs-on: ubuntu-latest
+    needs: security-scan
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build AEGIS Core Image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./app
+          file: ./app/Dockerfile
+          push: false
+          tags: aegis-core:latest
+
+      - name: Build AEGIS Controller Image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./controller
+          file: ./controller/Dockerfile
+          push: false
+          tags: aegis-controller:latest
