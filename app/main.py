@@ -270,3 +270,4 @@ def serve_dashboard():
 # Background telemetry daemon enabled
 # Chaos: /chaos/oom hook certified
 # Chaos: /chaos/crash hook certified
+# Chaos: CPU stress & latency hooks certified
