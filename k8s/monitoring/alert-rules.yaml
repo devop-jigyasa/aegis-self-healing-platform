@@ -1,0 +1,55 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: aegis-alert-rules
+  namespace: aegis-system
+  labels:
+    role: alert-rules
+    app.kubernetes.io/part-of: aegis-platform
+spec:
+  groups:
+    - name: aegis_sre_alerts
+      rules:
+        - alert: AegisPodCrashLooping
+          expr: rate(kube_pod_container_status_restarts_total{namespace="production-apps"}[5m]) * 60 > 2
+          for: 30s
+          labels:
+            severity: critical
+            deployment: aegis-core
+            namespace: production-apps
+          annotations:
+            summary: "AEGIS Pod is crash-looping in production-apps"
+            description: "Pod {{ $labels.pod }} restarted more than 2 times in 5 minutes."
+
+        - alert: AegisContainerOOMKilled
+          expr: kube_pod_container_status_last_terminated_reason{reason="OOMKilled",namespace="production-apps"} == 1
+          for: 0s
+          labels:
+            severity: critical
+            deployment: aegis-core
+            namespace: production-apps
+          annotations:
+            summary: "AEGIS Container was terminated due to OOMKill"
+            description: "Container in pod {{ $labels.pod }} exceeded memory limit."
+
+        - alert: AegisHighErrorRate
+          expr: sum(rate(aegis_http_requests_total{status_code="500"}[2m])) / sum(rate(aegis_http_requests_total[2m])) > 0.05
+          for: 1m
+          labels:
+            severity: warning
+            deployment: aegis-core
+            namespace: production-apps
+          annotations:
+            summary: "AEGIS High HTTP 500 Error Cascade"
+            description: "500 Error rate is greater than 5% over 2 minutes."
+
+        - alert: AegisLatencySLOBreach
+          expr: histogram_quantile(0.95, sum(rate(aegis_http_request_duration_seconds_bucket[5m])) by (le)) > 1.5
+          for: 1m
+          labels:
+            severity: warning
+            deployment: aegis-core
+            namespace: production-apps
+          annotations:
+            summary: "AEGIS p95 Latency SLO breached"
+            description: "p95 request duration exceeded 1.5s."
