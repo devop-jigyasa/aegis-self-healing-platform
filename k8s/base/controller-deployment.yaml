@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: aegis-controller
+  namespace: aegis-system
+  labels:
+    app: aegis-controller
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: aegis-controller
+  template:
+    metadata:
+      labels:
+        app: aegis-controller
+    spec:
+      serviceAccountName: aegis-controller-sa
+      containers:
+        - name: controller
+          image: aegis-controller:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 5000
+              name: webhook
+          resources:
+            requests:
+              cpu: "30m"
+              memory: "64Mi"
+            limits:
+              cpu: "150m"
+              memory: "128Mi"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: aegis-controller
+  namespace: aegis-system
+  labels:
+    app: aegis-controller
+spec:
+  selector:
+    app: aegis-controller
+  ports:
+    - name: webhook
+      port: 5000
+      targetPort: 5000
