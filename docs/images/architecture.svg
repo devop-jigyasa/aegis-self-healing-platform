@@ -178,9 +178,9 @@
       <rect width="344" height="140" rx="10" fill="url(#cardGrad)" stroke="#3b82f6" stroke-width="1.5" filter="url(#cardShadow)"/>
       <text x="16" y="28" class="card-head">K8s API Patcher &amp; Health Poller</text>
       <text x="16" y="50" class="card-sub">Scoped Least-Privilege ClusterRole</text>
-      <text x="16" y="74" class="card-txt">• Injects restartedAt annotation for rolling restart</text>
+      <text x="16" y="74" class="card-txt">• Injects restartedAt annotation on pods</text>
       <text x="16" y="94" class="card-txt">• Dynamic memory ceiling buffer adjustment</text>
-      <text x="16" y="114" class="card-txt">• Polls /healthz until 100% of replicas are healthy</text>
+      <text x="16" y="114" class="card-txt">• Polls /healthz until 100% replicas healthy</text>
       <text x="16" y="132" class="card-code" fill="#60a5fa">Benchmarked MTTR: &lt; 25.0s Verified</text>
     </g>
   </g>
