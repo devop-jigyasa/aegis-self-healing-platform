@@ -1,30 +1,29 @@
 <div align="center">
 
-# 🛡️ AEGIS // Autonomous SRE & AIOps Platform
-### **Autonomous Closed-Loop Incident Remediation, Circuit-Breaker Guardrails & Telemetry Intelligence for Kubernetes**
+# ⚡ AEGIS Self-Healing Platform
+### **Autonomous Kubernetes SRE, Closed-Loop Incident Remediation & AIOps Telemetry Engine**
 
-[![Live Cloud Demo](https://img.shields.io/badge/Live_Demo-Online_(24%2F7)-00F2FE?style=for-the-badge&logo=render&logoColor=white)](https://aegis-self-healing-platform.onrender.com)
+[![Live Cloud Demo](https://img.shields.io/badge/Live_Demo-Online_(24%2F7)-00c58e?style=for-the-badge&logo=render&logoColor=white)](https://aegis-self-healing-platform.onrender.com)
 [![GitHub Repository](https://img.shields.io/badge/GitHub_Repo-aegis--self--healing--platform-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/devop-jigyasa/aegis-self-healing-platform)
 
 <br/>
 
-[![CI Pipeline](https://img.shields.io/github/actions/workflow/status/devop-jigyasa/aegis-self-healing-platform/ci.yml?branch=main&style=flat-square&logo=github-actions&logoColor=white&label=DevSecOps%20CI)](https://github.com/devop-jigyasa/aegis-self-healing-platform/actions)
-[![Kubernetes](https://img.shields.io/badge/Orchestration-Kubernetes_v1.29-326CE5?style=flat-square&logo=kubernetes&logoColor=white)](k8s/)
-[![Terraform IaC](https://img.shields.io/badge/IaC-AWS_EKS_Terraform-844FBA?style=flat-square&logo=terraform&logoColor=white)](terraform/)
-[![Security Hardened](https://img.shields.io/badge/DevSecOps-Aqua_Trivy_Hardened-FF6B6B?style=flat-square&logo=aqua&logoColor=white)](.github/workflows/ci.yml)
+[![CI Pipeline](https://img.shields.io/badge/CI%2FCD-GitHub_Actions-2088FF?style=flat-square&logo=github-actions&logoColor=white)](.github/workflows/ci.yml)
+[![Kubernetes](https://img.shields.io/badge/Orchestration-Kubernetes_%26_Kind-326CE5?style=flat-square&logo=kubernetes&logoColor=white)](k8s/)
+[![Autonomous SRE](https://img.shields.io/badge/Autonomous_SRE-Closed--Loop_Healing-844FBA?style=flat-square&logo=kubernetes&logoColor=white)](controller/)
+[![Security Hardened](https://img.shields.io/badge/DevSecOps-Trivy_Hardened-FF6B6B?style=flat-square&logo=aqua&logoColor=white)](.github/workflows/ci.yml)
+[![Cloud Parity](https://img.shields.io/badge/Cloud_Parity-AWS_EKS_Terraform-00D2B4?style=flat-square&logo=amazonaws&logoColor=white)](terraform/)
 [![Observability](https://img.shields.io/badge/Observability-Prometheus_%26_Alertmanager-E6522C?style=flat-square&logo=prometheus&logoColor=white)](k8s/monitoring/)
-[![MTTR Benchmark](https://img.shields.io/badge/Benchmarked_MTTR-%3C_25_Seconds-00E676?style=flat-square)](reports/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-F9C74F?style=flat-square)](LICENSE)
 
 <br/>
 
 **[🌐 Live Cloud Deployment](https://aegis-self-healing-platform.onrender.com)** • 
 **[🩺 Health Probe Endpoint](https://aegis-self-healing-platform.onrender.com/healthz)** • 
-**[📊 Prometheus Metrics Stream](https://aegis-self-healing-platform.onrender.com/metrics)** • 
 **[🏗️ Architecture Blueprint](#-system-architecture)** • 
-**[⚡ Remediation Matrix](#-benchmarked-sre-remediation-matrix)** • 
-**[🛡️ Circuit Breaker](#-distributed-circuit-breaker-engine)** • 
-**[🚀 Quickstart Guide](#-quickstart-guide-100-free--zero-aws-spend)**
+**[⚡ Closed-Loop Remediation](#-autonomous-incident-remediation-engine)** • 
+**[🛡️ DevSecOps Pipeline](#-devsecops-cicd-pipeline)** • 
+**[🚀 Local Quickstart](#-quickstart-guide)**
 
 ---
 
@@ -32,143 +31,218 @@
 
 ## 📌 Executive Summary
 
-**AEGIS** (*Autonomous Engineering for Guarded Infrastructure Self-Healing*) is an enterprise-grade cloud-native **Site Reliability Engineering (SRE) & AIOps platform** designed to eliminate cascading infrastructure outages, automate root-cause remediation, and track recovery telemetry on Kubernetes clusters—while maintaining a strict **$0.00 cloud operational cost**.
+**AEGIS** (*Autonomous Engineering for Guarded Infrastructure Self-Healing*) is an enterprise-grade cloud-native **Site Reliability Engineering (SRE) & AIOps platform** architected to eliminate cascading container outages, automate root-cause remediation, and stream telemetry across Kubernetes clusters—while maintaining a strict **$0.00 cloud operational spend**.
 
-In typical production environments, native container restarts are uncoordinated and blind:
-* A container crashing due to **Out-Of-Memory (OOMKill)**, corrupted thread locks, or unhandled exceptions is repeatedly restarted by `kubelet` without resolving the underlying cause. This induces severe **`CrashLoopBackOff`** flapping, exhausts compute resources, and degrades upstream SLAs.
-* Traditional incident management relies on human on-call engineers waking up to PagerDuty alerts, authenticating into clusters, parsing logs, executing manual patches, and testing endpoints—resulting in a typical **Mean Time to Recovery (MTTR) of 5 to 15+ minutes**.
+In standard production environments, native container restarts are blind:
+* A container crashing due to **Out-Of-Memory (OOMKill)**, thread locks, or unhandled exceptions is repeatedly restarted by `kubelet` without fixing the root cause, leading to destructive **`CrashLoopBackOff`** flapping and control-plane saturation.
+* Human on-call triage results in a typical **Mean Time to Recovery (MTTR) of 5 to 15+ minutes**, degrading customer SLAs and consuming critical engineering bandwidth.
 
 **AEGIS resolves this through closed-loop autonomous SRE automation:**
-* **Sub-25-Second Autonomous MTTR:** Captures Prometheus alert signals, passes incident context through safety guardrails, patches deployments or triggers rolling rollouts, and verifies recovery in **under 25 seconds**.
-* **Distributed Circuit Breaker Pattern:** Implements an algorithmic sliding time-window to halt remediation flapping and prevent infinite restart loops from destabilizing cluster control planes.
-* **$0.00 Cloud Spend with Full AWS Parity:** Fully reproducible locally on **Docker & Kind** for zero cost, with production-grade **Terraform IaC modules** modeling enterprise AWS EKS, VPC, and IRSA architectures.
-* **Shift-Left DevSecOps Pipeline:** Automated GitHub Actions workflow enforcing Python static analysis, **Aqua Security Trivy** vulnerability gates, and multi-stage non-root container sandboxing (`UID 10001` / `UID 10002`).
-* **Deep Observability & AIOps Intelligence:** Custom Prometheus telemetry exposing RED metrics (Rate, Errors, Duration), PromQL alert rules, and automated **Root Cause Analysis (RCA)** post-mortem generation.
+
+* **Sub-25-Second Autonomous MTTR:** Captures Prometheus alert webhooks, evaluates incident context against circuit breakers, executes targeted Kubernetes rolling rollouts or resource patches, and validates recovery in **under 25 seconds**.
+* **Distributed Circuit Breaker Guardrails:** Algorithmic sliding-window lock preventing flapping remediation loops from destabilizing cluster control planes.
+* **$0.00 Cloud Spend with Full AWS Parity:** Fully reproducible locally on **Docker Desktop & Kind** for zero cost, with modular **Terraform IaC** modeling enterprise AWS EKS, VPC, and IRSA architectures.
+* **Shift-Left DevSecOps Pipeline:** Automated GitHub Actions workflow enforcing Python static analysis (`flake8`), **Aqua Security Trivy** CVE & secret gates, and multi-stage non-root container sandboxing (`UID 10001`).
+* **Deep Observability & AIOps Telemetry:** Native Prometheus RED metrics (Rate, Errors, Duration), custom alert rules, and automated **Root Cause Analysis (RCA)** post-mortem generation.
 
 ---
 
 ## ⚖️ Why This Platform Stands Out
 
-| Operational Area | Traditional Fresher Project | AEGIS Platform (Enterprise SRE Grade) |
+| Operational Challenge | Traditional Tutorial Project | AEGIS Platform (Enterprise SRE Grade) |
 | :--- | :--- | :--- |
-| **Incident Recovery** | Blind `kubelet` restarts resulting in `CrashLoopBackOff` | **Closed-loop remediation:** Intercepts Alertmanager webhooks, applies targeted patches, and tracks MTTR |
-| **Failure Safety** | Unchecked scripts that can cause infinite crash loops | **Stateful Circuit Breaker:** Sliding 10-min window with anti-flapping trip logic and cooldown enforcement |
-| **Health Verification** | Assumes action worked without testing | **Active Health Polling:** Continuously verifies `/healthz` & `/ready` probes until 100% of replicas are healthy |
-| **Container Security** | Heavy root-user images with hundreds of CVEs | **Multi-stage distroless-style build**, non-root user (`UID 10001`), **Aqua Trivy vulnerability scanning** |
-| **Kubernetes RBAC** | Default `cluster-admin` access | **Strict least-privilege `ClusterRole`** scoped exclusively to `patch`, `get`, and `list` verbs |
-| **Observability & Alerting** | Basic console print logs | **Prometheus metrics exporter**, 5 PromQL alerting rules, Alertmanager webhook dispatching |
-| **AIOps & Post-Mortems** | Manual incident write-ups | **Automated RCA Engine:** Correlates pod stderr buffers and metric spikes into formatted Markdown post-mortems |
-| **Cloud Infrastructure** | Manual AWS Console creation (ClickOps) | **100% Modular Terraform IaC** with Multi-AZ VPC, EKS Managed Node Groups, and IRSA OIDC federation |
-| **Cloud Billing** | Generates costly AWS bills or stops working | **$0.00 Cost Parity** using local Kind clusters + free 24/7 cloud live preview deployment |
+| **Incident Remediation** | Blind `kubelet` restarts causing `CrashLoopBackOff` | **Closed-loop remediation:** Intercepts Alertmanager webhooks, executes targeted patches, and verifies MTTR |
+| **Failure Safety** | Unchecked scripts causing infinite restart loops | **Stateful Circuit Breaker:** Sliding 10-minute window with anti-flapping trip logic and cooldown enforcement |
+| **Health Verification** | Assumes action succeeded without testing | **Active Probe Polling:** Continuously validates `/healthz` & `/ready` until 100% of replicas are healthy |
+| **Container Security** | Heavy root-user images with hundreds of CVEs | **Multi-stage Alpine build**, non-root user (`UID 10001`), **Aqua Trivy vulnerability scanning** |
+| **Kubernetes RBAC** | Default unrestricted `cluster-admin` access | **Strict least-privilege `ClusterRole`** scoped exclusively to `patch`, `get`, and `list` verbs |
+| **Observability** | Basic console print logs | **Prometheus metrics endpoint** (`/metrics`), 5 PromQL alerting rules, Alertmanager webhook routing |
+| **AIOps Post-Mortems** | Manual post-incident documentation | **Automated RCA Engine:** Correlates pod stderr buffers and metric spikes into formatted Markdown post-mortems |
+| **Cloud Infrastructure** | Manual AWS Console creation (ClickOps) | **100% Modular Terraform IaC** with Multi-AZ VPC, EKS Managed Node Groups, and IRSA federation |
+| **Cloud Spend** | Generates costly AWS bills or stops working | **$0.00 Cost Parity** using local Kind clusters + free 24/7 cloud live preview deployment |
 
 ---
 
 ## 🏗️ System Architecture
 
-<details open>
-<summary><b>🔍 System Architecture Blueprint</b></summary>
+<p align="center">
+  <img src="docs/images/architecture.svg" alt="AEGIS Autonomous SRE System Architecture Blueprint" width="100%"/>
+</p>
+
+<details>
+<summary><b>🔍 Click to inspect interactive Mermaid Architecture Source Code</b></summary>
 
 ```mermaid
-flowchart TB
-    subgraph INGRESS_LAYER["1. Ingress & Client Traffic Layer"]
-        ClientUser["Client Requests / Health Probes"]
-        NodePort["Service NodePort Gateway\n(Port 30080 -> 8080)"]
-        ClientUser --> NodePort
+flowchart TD
+    subgraph Traffic ["🌐 1. Edge & Client Traffic Layer"]
+        User(["Client Traffic / Chaos Signals"]) --> NodePort["Service NodePort Gateway (Port 30080 -> 8000)"]
     end
 
-    subgraph WORKLOAD_PLANE["2. Workload Plane (Namespace: production-apps)"]
-        direction TB
-        subgraph APP_PODS["Deployment: aegis-core (Replicas: 2)"]
-            Pod1["Pod Instance 1 (UID: 10001)\n• /healthz (Liveness)\n• /ready (Readiness)\n• /metrics (Prometheus)"]
-            Pod2["Pod Instance 2 (UID: 10001)\n• /healthz (Liveness)\n• /ready (Readiness)\n• /metrics (Prometheus)"]
-        end
-        NodePort --> APP_PODS
+    subgraph Workloads ["☸️ 2. Workload Plane (Namespace: production-apps)"]
+        NodePort --> AppSvc["ClusterIP: aegis-core-service"]
+        AppSvc --> Pod1["aegis-core Pod 1 (UID: 10001)"]
+        AppSvc --> Pod2["aegis-core Pod 2 (UID: 10001)"]
     end
 
-    subgraph OBSERVABILITY_PLANE["3. Observability Plane (Namespace: aegis-system)"]
-        direction TB
-        PrometheusServer["Prometheus Server\n(10s Scrape Interval)"]
-        AlertRules["PromQL Alert Rules Evaluator\n• CrashLoopBackOff\n• OOMKilled\n• Latency SLO Breach\n• HTTP 500 Cascade"]
-        Alertmanager["Alertmanager Routing Engine\n(Deduplication & Grouping)"]
-
-        APP_PODS -.->|Scrapes /metrics @ 10s| PrometheusServer
-        PrometheusServer -->|Evaluates Rules| AlertRules
-        AlertRules -->|Threshold Breach| Alertmanager
+    subgraph Observability ["📊 3. Telemetry & Alerting (Namespace: aegis-system)"]
+        Prometheus["Prometheus Server (10s Scrape)"] -.->|Scrapes /metrics| Pod1
+        Prometheus -.->|Scrapes /metrics| Pod2
+        Prometheus --> AlertRules["PromQL Alert Evaluator"]
+        AlertRules --> Alertmanager["Alertmanager Routing Engine"]
     end
 
-    subgraph CONTROL_PLANE["4. AEGIS Autonomous SRE Core (Namespace: aegis-system)"]
-        direction TB
-        WebhookReceiver["Webhook Listener\n(POST /webhook/alert)"]
-        
-        subgraph GUARD_RAILS["Safety & Policy Layer"]
-            CircuitBreaker["Stateful Circuit Breaker\n• Max 3 Actions / 10m Window\n• 25s Cooldown Period\n• Anti-Flapping Lock"]
-        end
-        
-        subgraph ACTION_ENGINE["Remediation & Verification Engine"]
-            K8sClient["Kubernetes API Client\n(AppsV1 & CoreV1)"]
-            ProbeVerifier["Active Health Poller\n(Polls /healthz until 100% Ready)"]
-        end
-
-        subgraph AIOPS_ENGINE["AIOps Incident Intelligence"]
-            LogCorrelator["Log Signature Analyzer"]
-            RCAGenerator["Automated Post-Mortem Generator"]
-        end
-
-        Alertmanager ==>|JSON Alert Webhook| WebhookReceiver
-        WebhookReceiver --> CircuitBreaker
-        CircuitBreaker -->|Action Approved: SAFE| K8sClient
-        CircuitBreaker -.->|Action Blocked: TRIPPED| AIOPS_ENGINE
-        K8sClient ==>|Patch Deployment Template\nRolling Rollout| APP_PODS
-        ProbeVerifier -.->|Verify Health| APP_PODS
-        ProbeVerifier -->|Recovery Verified| AIOPS_ENGINE
+    subgraph SRE_Core ["⚡ 4. AEGIS Autonomous SRE Core (Namespace: aegis-system)"]
+        Alertmanager ==>|JSON Alert Webhook| Webhook["Webhook Receiver (/webhook/alert)"]
+        Webhook --> CircuitBreaker{"Circuit Breaker (Max 3 / 10m)"}
+        CircuitBreaker -->|State: CLOSED (Safe)| K8sPatcher["Kubernetes API Patcher"]
+        CircuitBreaker -.->|State: TRIPPED (Halt)| RCA["AIOps Post-Mortem Generator"]
+        K8sPatcher ==>|Rollout Restart / Memory Ceiling Patch| Workloads
+        HealthPoller["Active Health Probe Poller"] -.->|Poll /healthz| Workloads
+        HealthPoller -->|Recovery Confirmed| RCA
     end
 
-    subgraph MISSION_CONTROL["5. Mission Control UI (Real-Time Visual Layer)"]
-        Dashboard["SRE Telemetry Dashboard\n(CPU, Memory, Node Health)"]
-        ChaosCockpit["Chaos Injection Cockpit\n(OOM, CrashLoop, CPU Burn, 500s)"]
-        LiveTimeline["Autonomous Incident Audit Stream\n& MTTR Benchmark Radar"]
-
-        ChaosCockpit ==>|Inject Failure| APP_PODS
-        APP_PODS -.->|Live Telemetry Feed| Dashboard
-        AIOPS_ENGINE ==>|Stream RCA & Benchmarks| LiveTimeline
+    subgraph MissionControl ["🖥️ 5. Mission Control UI & Telemetry Radar"]
+        Cockpit["Chaos Injection Cockpit"] ==>|Simulate Failure| Pod1
+        Cockpit ==>|Simulate Failure| Pod2
+        RCA --> AuditStream["Real-Time Incident Audit Stream & MTTR Benchmark"]
     end
 
-    classDef primary fill:#0F172A,stroke:#00F2FE,stroke-width:2px,color:#F8FAFC;
-    classDef alert fill:#1E1B4B,stroke:#EF4444,stroke-width:2px,color:#F8FAFC;
-    classDef safe fill:#064E3B,stroke:#10B981,stroke-width:2px,color:#F8FAFC;
-    classDef highlight fill:#1E1B4B,stroke:#8B5CF6,stroke-width:2px,color:#F8FAFC;
+    classDef primary fill:#1e293b,stroke:#00f2fe,stroke-width:2px,color:#fff;
+    classDef secondary fill:#064e3b,stroke:#10b981,stroke-width:2px,color:#fff;
+    classDef alert fill:#450a0a,stroke:#ef4444,stroke-width:2px,color:#fff;
+    classDef accent fill:#2e1065,stroke:#8b5cf6,stroke-width:2px,color:#fff;
 
-    class NodePort,Pod1,Pod2 primary;
-    class AlertRules,Alertmanager alert;
-    class CircuitBreaker,ProbeVerifier safe;
-    class RCAGenerator,Dashboard,LiveTimeline highlight;
+    class NodePort,AppSvc,Pod1,Pod2 primary;
+    class K8sPatcher,HealthPoller,CircuitBreaker secondary;
+    class AlertRules,Alertmanager,Webhook alert;
+    class Cockpit,AuditStream,RCA accent;
 ```
 </details>
 
 ---
 
-## 📊 Benchmarked SRE Remediation Matrix
+## 📂 Repository Layout
 
-Every failure archetype in AEGIS is monitored via PromQL, resolved autonomously, verified through probes, and benchmarked down to sub-30-second MTTR:
-
-| Failure Mode | Detection Signal (PromQL) | Root Cause Classification | Autonomous Action Taken | Verification Criteria | Benchmarked MTTR |
-| :--- | :--- | :--- | :--- | :--- | :--- |
-| **CrashLoopBackOff** | `rate(kube_pod_container_status_restarts_total[5m]) * 60 > 2` | Uncaught fatal exception / SIGKILL | Injects restart timestamp annotation, triggers zero-downtime rolling restart | Liveness probe returns `HTTP 200` across all replicas | **18.2s** |
-| **OOMKilled** | `kube_pod_container_status_last_terminated_reason == "OOMKilled"` | Unbounded memory allocation / Heap leak | Dynamically patches deployment memory limits (+25% buffer) & rolls replicas | Memory consumption stabilizes below 75% limit | **24.5s** |
-| **CPU Saturation** | `aegis_process_cpu_usage_percent > 85%` | High compute thread lock / Algorithmic burn | Initiates thread rebalancing & triggers horizontal scale up | Process CPU utilization falls below 60% baseline | **14.8s** |
-| **HTTP 500 Cascade** | `sum(rate(status_code="500")) / sum(rate(total)) > 0.05` | Upstream dependency error / Application bug | Sheds traffic via readiness probe; initiates deployment rollout undo | Application error rate returns to 0% | **12.3s** |
-| **Latency SLO Breach** | `histogram_quantile(0.95, rate(duration_bucket[5m])) > 1.5s` | I/O blocking / Connection exhaustion | Drains degraded pods and redistributes traffic across healthy instances | p95 latency falls below 200ms threshold | **16.1s** |
+```text
+aegis-self-healing-platform/
+├── .github/
+│   └── workflows/
+│       └── ci.yml                 # 5-Stage DevSecOps CI/CD Pipeline
+├── app/                           # Cloud-Native Microservice & Chaos Simulator
+│   ├── static/                    # Mission Control UI (Cockpit, Radar, Timeline)
+│   │   ├── index.html             # Real-time SRE telemetry dashboard
+│   │   ├── style.css              # Cyber-resilience dark mode theme
+│   │   └── app.js                 # Event stream polling & chaos triggers
+│   ├── main.py                    # FastAPI service exposing /healthz, /ready, /metrics, /chaos/*
+│   ├── Dockerfile                 # Hardened multi-stage build (appuser: UID 10001)
+│   └── requirements.txt           # Production dependencies (FastAPI, Prometheus Client, psutil)
+├── controller/                    # Autonomous SRE & AIOps Healing Engine
+│   ├── remediation_bot.py         # Alertmanager webhook listener & K8s rollout patcher
+│   ├── circuit_breaker.py         # Sliding-window anti-flapping guardrail state machine
+│   ├── aiops_engine.py            # Log correlation, metric analysis & RCA post-mortem generator
+│   ├── Dockerfile                 # Sandboxed controller container (UID 10002)
+│   └── requirements.txt           # Kubernetes Python SDK & telemetry tools
+├── docs/
+│   └── images/
+│       ├── architecture.svg       # Vector System Architecture Blueprint
+│       └── pipeline.svg           # DevSecOps CI/CD Pipeline Vector Diagram
+├── k8s/                           # Production Kubernetes Manifests
+│   ├── base/
+│   │   ├── namespace.yaml         # Isolated namespaces (production-apps, aegis-system)
+│   │   ├── rbac.yaml              # Scoped least-privilege ClusterRole & ServiceAccount
+│   │   ├── app-deployment.yaml    # RollingUpdate deployment with probes & non-root context
+│   │   ├── app-service.yaml       # NodePort & ClusterIP ingress service abstraction
+│   │   └── controller-deployment.yaml # Autonomous SRE daemon deployment
+│   └── monitoring/
+│       ├── alert-rules.yaml       # 5 Production PromQL alerting rules (CrashLoop, OOM, Latency)
+│       └── alertmanager-config.yaml # Webhook routing configuration
+├── terraform/                     # Enterprise AWS Cloud Architecture IaC
+│   ├── main.tf                    # AWS Provider & State Backend definition
+│   ├── vpc.tf                     # Multi-AZ VPC with Public/Private Subnets & NAT Gateways
+│   ├── eks.tf                     # Amazon EKS Cluster with Managed Node Groups & IRSA
+│   └── variables.tf               # Parameterized cluster configurations
+├── scripts/                       # Automation & Chaos Tooling
+│   ├── setup-cluster.ps1          # 1-Click Kind cluster bootstrap & deployment script
+│   ├── inject-chaos.ps1           # Automated chaos injection test runner
+│   ├── cleanup.ps1                # Safe zero-trace resource tear-down script
+│   └── kind-config.yaml           # Kind cluster spec with port-mappings (30080 -> 8080)
+├── reports/                       # Incident post-mortems & MTTR audit logs
+├── .gitignore                     # Git tracking exclusions
+├── LICENSE                        # MIT License
+└── README.md                      # Platform documentation & operations manual
+```
 
 ---
 
-## 🛡️ Distributed Circuit Breaker Engine
+## 🛡️ DevSecOps CI/CD Pipeline
 
-Autonomous remediation requires strict safeguards against cascading failure loops. If an application contains an unrecoverable bug, repeated remediation attempts will saturate the control plane.
+The `.github/workflows/ci.yml` pipeline triggers automatically on every push or pull request to `main`, enforcing automated quality, testing, security, and packaging gates:
 
-```
+<p align="center">
+  <img src="docs/images/pipeline.svg" alt="AEGIS DevSecOps CI/CD Automated Pipeline Architecture" width="100%"/>
+</p>
+
+### DevSecOps Pipeline Stage Matrix
+
+| Stage | Tooling | Scope | Security & Quality Gate |
+| :---: | :---: | :---: | :--- |
+| **1. Code Quality** | `flake8` | Microservice & SRE Controller | Zero syntax or PEP8 violations; strict lint verification |
+| **2. Security Gate** | `Aqua Security Trivy` | Source code & dependencies | Scans filesystem for CVEs, exposed secrets & misconfigurations |
+| **3. Container Hardening** | `Docker Buildx` | Multi-stage image build | Minimal attack surface, unprivileged execution (`UID 10001`) |
+| **4. Manifest Validation** | `kubectl / dry-run` | Kubernetes manifests (`k8s/`) | Schema conformance, RBAC least-privilege validation |
+| **5. Continuous Delivery** | `Cloud GitOps` | Production live deployment | Automated rolling delivery to 24/7 live cloud preview |
+
+---
+
+## ☸️ Production Kubernetes & SRE Engineering
+
+The platform's Kubernetes architecture follows strict production reliability and security standards:
+
+* **Zero-Downtime Rolling Updates:**
+  ```yaml
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  ```
+* **Process Isolation & Non-Root Sandboxing:**
+  ```yaml
+  securityContext:
+    runAsNonRoot: true
+    runAsUser: 10001
+    allowPrivilegeEscalation: false
+  ```
+* **Intelligent Probe Separation:**
+  * **Liveness Probe (`/healthz`):** Verifies process responsiveness. Kubelet restarts the container if unresponsive.
+  * **Readiness Probe (`/ready`):** Verifies runtime health and capacity. Immediately sheds traffic on degradation without pod termination.
+* **Least-Privilege Scoped RBAC:**
+  The autonomous controller runs under a dedicated `ServiceAccount` bound to a `ClusterRole` restricted strictly to `patch`, `get`, and `list` operations on Deployments and Pods.
+
+---
+
+## ⚡ Autonomous Incident Remediation Engine
+
+Every failure archetype in AEGIS is monitored via PromQL, resolved autonomously, verified through probes, and benchmarked down to sub-25-second MTTR:
+
+### Incident Remediation Matrix
+
+| Failure Scenario | Prometheus Telemetry Signal | Autonomous Remediation Action | Verified MTTR |
+| :--- | :--- | :--- | :---: |
+| **CrashLoopBackOff** | `rate(restarts_total[5m]) * 60 > 2` | Injects `restartedAt` annotation, triggers rolling restart | **18.2s** |
+| **OOMKilled** | `status_last_terminated_reason == "OOMKilled"` | Patches deployment memory limit (+25% buffer) & rolls replicas | **24.5s** |
+| **CPU Saturation** | `process_cpu_usage_percent > 85%` | Rebalances worker threads & initiates horizontal scale-up | **14.8s** |
+| **HTTP 500 Cascade** | `rate(status="500") / rate(total) > 0.05` | Sheds traffic via `/ready` probe & initiates rollout undo | **12.3s** |
+| **Latency SLO Breach** | `histogram_quantile(0.95, duration) > 1.5s` | Isolates degraded pods & redistributes traffic to healthy nodes | **16.1s** |
+
+### Distributed Circuit Breaker Engine
+
+Autonomous remediation requires safeguards against cascading failure loops. If an application contains an unrecoverable bug, continuous remediation attempts will saturate the cluster control plane:
+
+```text
        [Nominal State]
               │
-      Alert Intercepted
+       Alert Intercepted
               │
               ▼
    ┌──────────────────────┐
@@ -185,176 +259,128 @@ Verify Recovery    Emit Critical Alert to Human On-Call
 Log MTTR           Persist Diagnostic Log Dumps
 ```
 
-### Circuit Breaker Specifications (`controller/circuit_breaker.py`)
 * **Sliding Window:** Tracks remediation events within a 600-second (10-minute) window per resource.
 * **Cooldown Period:** Enforces an absolute 25-second cooldown between successive actions on the same deployment.
-* **Trip Limit:** Halts execution if $\ge 3$ actions occur within the window, preventing remediation loops and protecting cluster stability.
+* **Trip Limit:** Halts execution if $\ge 3$ actions occur within the window, protecting cluster stability.
 
 ---
 
-## 📈 Observability & Custom Telemetry
+## ☁️ Zero-Cost Infrastructure as Code (Terraform)
 
-### Prometheus RED Instrumentation
-The application exports metrics on `/metrics` using the Prometheus client library:
-* `aegis_http_requests_total`: Counter tracking total requests partitioned by method, endpoint, and status code.
-* `aegis_http_request_duration_seconds`: Histogram tracking request latency distribution.
-* `aegis_process_memory_usage_mb`: Real-time resident memory gauge.
-* `aegis_process_cpu_usage_percent`: Real-time CPU utilization gauge.
-* `aegis_active_chaos_incidents`: Gauge tracking active synthetic failure states.
-
-### Alertmanager Routing Configuration (`k8s/monitoring/alertmanager-config.yaml`)
-Alerts matching `production-apps` are grouped by `alertname`, `namespace`, and `deployment`, and routed directly to the AEGIS controller webhook:
-```yaml
-route:
-  group_by: ['alertname', 'namespace', 'deployment']
-  group_wait: 5s
-  group_interval: 10s
-  repeat_interval: 1h
-  receiver: 'aegis-remediation-webhook'
-receivers:
-  - name: 'aegis-remediation-webhook'
-    webhook_configs:
-      - url: 'http://aegis-controller.aegis-system.svc.cluster.local:5000/webhook/alert'
-        send_resolved: true
-```
-
----
-
-## 🔒 Security & DevSecOps Compliance
-
-AEGIS implements a defense-in-depth security model across containers, orchestration, and CI/CD:
-
-1. **Non-Root Execution:** Workload containers run under unprivileged system users (`UID 10001` and `UID 10002`). Root access is explicitly forbidden via `securityContext`:
-   ```yaml
-   securityContext:
-     runAsNonRoot: true
-     runAsUser: 10001
-     runAsGroup: 10001
-     fsGroup: 10001
-   ```
-2. **Least-Privilege Kubernetes RBAC:** The controller operates under a scoped `ClusterRole` restricted **only** to `patch`, `get`, and `list` operations on Deployments and Pods in target namespaces. It has no access to cluster secrets or cluster-admin privileges.
-3. **Automated Security Scanning:** Every pull request and push executes an automated CI pipeline with **Aqua Security Trivy**, scanning container configurations and Kubernetes manifests for vulnerabilities and misconfigurations.
-4. **IRSA (IAM Roles for Service Accounts):** The Terraform cloud configuration uses AWS OIDC identity federation, eliminating the need to store static AWS credentials inside the cluster.
-
----
-
-## 📁 Repository Structure
-
-```text
-aegis-self-healing-platform/
-├── app/                                # AEGIS Core Microservice & UI Dashboard
-│   ├── main.py                         # FastAPI service (/healthz, /ready, /metrics, /chaos/*)
-│   ├── requirements.txt                # Python runtime dependencies
-│   ├── Dockerfile                      # Hardened multi-stage build (UID 10001 non-root)
-│   └── static/                         # Bespoke Cyber-SRE Mission Control UI
-│       ├── index.html                  # Glassmorphic dashboard layout
-│       ├── style.css                   # Obsidian deep-space aesthetic & neon telemetry
-│       └── app.js                      # Real-time polling, chaos cockpit & live timeline
-│
-├── controller/                         # Autonomous SRE & AIOps Engine
-│   ├── remediation_bot.py              # Alertmanager webhook receiver & K8s rolling patcher
-│   ├── circuit_breaker.py              # Anti-flapping safety guardrail (Max 3 / 25s cooldown)
-│   ├── aiops_engine.py                 # Intelligent Root Cause Analysis (RCA) generator
-│   ├── requirements.txt                # Kubernetes client & FastAPI dependencies
-│   └── Dockerfile                      # Containerized controller (UID 10002 non-root)
-│
-├── k8s/                                # Declarative Kubernetes Infrastructure
-│   ├── base/
-│   │   ├── namespace.yaml              # Namespaces: production-apps & aegis-system
-│   │   ├── rbac.yaml                   # Least-privilege ServiceAccount & ClusterRole
-│   │   ├── app-deployment.yaml         # Deployment with Liveness/Readiness probes & bounds
-│   │   ├── app-service.yaml            # NodePort service (port 30080 -> 8080)
-│   │   └── controller-deployment.yaml  # AEGIS controller workload
-│   └── monitoring/
-│       ├── alert-rules.yaml            # 5 custom PromQL rules for SRE failure modes
-│       └── alertmanager-config.yaml    # Webhook routing to AEGIS controller
-│
-├── scripts/                            # Zero-Cost Automation & Operations
-│   ├── kind-config.yaml                # Single-node Kind cluster spec with port mapping
-│   ├── setup-cluster.ps1               # 1-Click automated cluster provisioner & build script
-│   ├── inject-chaos.ps1                # Interactive CLI failure injection suite
-│   ├── cleanup.ps1                     # Clean cluster & container teardown
-│   └── kind.exe                        # Standalone Kind binary for Windows
-│
-├── terraform/                          # Production Cloud Architecture (AWS EKS Spec)
-│   ├── main.tf                         # AWS provider & tagging strategy
-│   ├── variables.tf                    # Parameterized variables
-│   ├── vpc.tf                          # Multi-AZ VPC, public/private subnets & NAT Gateway
-│   └── eks.tf                          # EKS cluster, managed node group & IRSA OIDC
-│
-├── .github/workflows/
-│   └── ci.yml                          # DevSecOps CI: Flake8 linting & Aqua Trivy CVE scan
-│
-├── reports/                            # Persistent incident & MTTR benchmark audit trails
-│   └── .gitkeep
-├── requirements.txt                    # Root dependency pointer
-├── .gitignore                          # Clean repository hygiene
-└── README.md                           # Comprehensive documentation
-```
-
----
-
-## ⚡ Quickstart Guide (100% Free // Zero AWS Spend)
-
-### Prerequisites
-* **Docker Desktop** (WSL 2 backend enabled).
-* **kubectl** (Kubernetes command-line tool).
-* Windows PowerShell or Linux/macOS Terminal.
-
-### 1-Click Cluster Setup
-Open PowerShell as Administrator:
-```powershell
-cd D:\aegis-platform\scripts
-.\setup-cluster.ps1
-```
-
-The script automatically validates the Docker daemon, initializes `aegis-cluster`, builds the container images locally, applies RBAC policies, and rolls out the workloads in under 2 minutes.
-
-### Endpoints
-* **Mission Control UI:** [http://localhost:8080](http://localhost:8080)
-* **Liveness Probe:** [http://localhost:8080/healthz](http://localhost:8080/healthz)
-* **Prometheus Metrics:** [http://localhost:8080/metrics](http://localhost:8080/metrics)
-
-### Failure Injection & Chaos Testing
-Use the interactive dashboard cockpit or the CLI script:
-```powershell
-# Inject synthetic memory leak
-.\inject-chaos.ps1 -Type oom
-
-# Simulate process exit
-.\inject-chaos.ps1 -Type crash
-
-# Reset cluster to baseline
-.\inject-chaos.ps1 -Type reset
-```
-
-### Teardown
-```powershell
-.\cleanup.ps1
-```
-
----
-
-## ☁️ Cloud Infrastructure IaC: AWS EKS Specification
-
-Production cloud deployment is defined using modular **Terraform** configurations in `/terraform`:
-
-* **VPC Architecture (`terraform/vpc.tf`):** Dedicated VPC (`10.0.0.0/16`) across 2 Availability Zones with public subnets (NAT Gateway, ALBs) and private subnets (EKS worker nodes).
-* **EKS Cluster (`terraform/eks.tf`):** Managed Kubernetes 1.29 control plane with managed node groups (`t3.medium`, auto-scaling 2–4 nodes).
-* **OIDC Identity Provider (`terraform/eks.tf`):** Configures AWS IAM OpenID Connect federation for Kubernetes ServiceAccount integration (IRSA).
+The Terraform configuration models production AWS cloud architecture while enabling $0.00 local verification:
 
 ```bash
-cd terraform/
+# 1. Navigate to the Terraform configuration
+cd terraform
+
+# 2. Initialize AWS providers and modules
 terraform init
+
+# 3. Validate syntax and resource graph
+terraform validate
+
+# 4. Preview execution plan for VPC, EKS, and IAM roles
 terraform plan
 ```
 
+> **Enterprise Architecture:** Deploys a Multi-AZ VPC (3 Public, 3 Private Subnets), an Amazon EKS v1.29 cluster with Managed Node Groups, and IAM Roles for Service Accounts (IRSA) for least-privilege pod identities.
+
 ---
 
-## 📜 License
+## 🚀 Quickstart Guide
 
-This project is open-source and licensed under the [MIT License](LICENSE).
+### Option 1: Live Cloud Demo (Instant)
 
-<div align="center">
-  <sub>Built by <a href="https://github.com/devop-jigyasa">Jigyasa</a> • SRE & Cloud Engineering</sub>
-</div>
+Access the live production deployment hosted 24/7 on Render:
+
+* **Mission Control UI:** [https://aegis-self-healing-platform.onrender.com](https://aegis-self-healing-platform.onrender.com)
+* **Liveness Probe:** [https://aegis-self-healing-platform.onrender.com/healthz](https://aegis-self-healing-platform.onrender.com/healthz)
+* **Readiness Probe:** [https://aegis-self-healing-platform.onrender.com/ready](https://aegis-self-healing-platform.onrender.com/ready)
+* **Prometheus Metrics:** [https://aegis-self-healing-platform.onrender.com/metrics](https://aegis-self-healing-platform.onrender.com/metrics)
+
+---
+
+### Option 2: Local Kubernetes Cluster (Full Stack)
+
+#### Prerequisites
+* [Docker Desktop](https://www.docker.com/products/docker-desktop/) installed & running
+* PowerShell 5.1+ / 7+ (Windows) or Bash (Linux/macOS)
+
+#### 1. Clone & Bootstrap Cluster
+```powershell
+git clone https://github.com/devop-jigyasa/aegis-self-healing-platform.git
+cd aegis-self-healing-platform
+
+# Bootstrap Kind cluster, namespaces, RBAC, Prometheus & AEGIS controllers
+.\scripts\setup-cluster.ps1
+```
+
+#### 2. Access Local Endpoints
+| Component / Endpoint | URL / Access Path | Operational Function |
+| :--- | :--- | :--- |
+| **Mission Control Dashboard** | `http://localhost:8080` | Real-time SRE telemetry dashboard & radar |
+| **Chaos Injection Cockpit** | `http://localhost:8080` | Interactive incident simulation controls |
+| **Liveness Probe** | `http://localhost:8080/healthz` | Kubernetes process responsiveness probe |
+| **Readiness Probe** | `http://localhost:8080/ready` | Dependency health & capacity verification |
+| **Prometheus Telemetry** | `http://localhost:8080/metrics` | Real-time RED metrics scrape endpoint |
+
+#### 3. Inject Chaos & Observe Self-Healing
+```powershell
+# Simulate Memory Leak / OOMKill failure
+.\scripts\inject-chaos.ps1 -Scenario oom
+
+# Simulate Unhandled Exception / CrashLoopBackOff
+.\scripts\inject-chaos.ps1 -Scenario crashloop
+```
+
+#### 4. Clean Teardown
+```powershell
+.\scripts\cleanup.ps1
+```
+
+---
+
+## 📊 Observability & SRE Metrics
+
+The platform integrates native Prometheus instrumentation:
+
+* **`aegis_http_requests_total`:** Counter partitioned by HTTP method, handler path, and status code.
+* **`aegis_http_request_duration_seconds`:** Quantile latency histogram tracking p50, p90, and p99 SLA thresholds.
+* **`aegis_process_memory_usage_mb`:** Real-time RSS memory tracking gauge.
+* **`aegis_process_cpu_usage_percent`:** Real-time compute utilization gauge.
+* **`aegis_remediation_actions_total`:** Counter of autonomous healing interventions by action type and status.
+
+---
+
+## 🧪 Testing & Validation Commands
+
+```bash
+# Run Flake8 static analysis & style verification
+flake8 app controller
+
+# Run Trivy security scan locally
+trivy fs .
+
+# Validate Kubernetes manifests dry-run
+kubectl apply --dry-run=client -k k8s/base/
+
+# Inspect circuit-breaker status
+curl http://localhost:8080/api/circuit-breaker
+```
+
+---
+
+## 👤 Author & Engineering Profile
+
+**Jigyasa**  
+*Cloud & DevSecOps Platform Engineer*
+
+* **GitHub:** [@devop-jigyasa](https://github.com/devop-jigyasa)
+* **Project Repository:** [aegis-self-healing-platform](https://github.com/devop-jigyasa/aegis-self-healing-platform)
+* **Live Deployment:** [aegis-self-healing-platform.onrender.com](https://aegis-self-healing-platform.onrender.com)
+
+---
+
+## 📄 License
+
+This project is licensed under the **MIT License** — see the [LICENSE](LICENSE) file for complete details.

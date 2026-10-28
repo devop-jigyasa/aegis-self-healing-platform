@@ -1,0 +1,278 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 780" width="100%" height="100%">
+  <defs>
+    <!-- Background Gradient -->
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#070a14"/>
+      <stop offset="50%" stop-color="#0c1222"/>
+      <stop offset="100%" stop-color="#050811"/>
+    </linearGradient>
+
+    <!-- Card Background Gradient -->
+    <linearGradient id="cardGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#162032"/>
+      <stop offset="100%" stop-color="#0b111e"/>
+    </linearGradient>
+
+    <linearGradient id="cyanGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#00F2FE"/>
+      <stop offset="100%" stop-color="#4FACFE"/>
+    </linearGradient>
+
+    <linearGradient id="purpleGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#8B5CF6"/>
+      <stop offset="100%" stop-color="#D946EF"/>
+    </linearGradient>
+
+    <!-- Drop Shadows -->
+    <filter id="cardShadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="#000000" flood-opacity="0.6"/>
+    </filter>
+
+    <filter id="glowCyan" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="0" stdDeviation="6" flood-color="#00F2FE" flood-opacity="0.5"/>
+    </filter>
+  </defs>
+
+  <style>
+    .main-title { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-weight: 800; font-size: 26px; fill: #ffffff; letter-spacing: 1px; }
+    .main-subtitle { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-weight: 500; font-size: 13px; fill: #94a3b8; letter-spacing: 0.5px; }
+    .badge-label { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-weight: 700; font-size: 11px; fill: #ffffff; }
+    .zone-title { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-weight: 700; font-size: 13px; fill: #00F2FE; letter-spacing: 1px; text-transform: uppercase; }
+    .card-head { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-weight: 700; font-size: 15px; fill: #f8fafc; }
+    .card-sub { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-weight: 600; font-size: 12px; fill: #38bdf8; }
+    .card-txt { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-weight: 400; font-size: 12px; fill: #cbd5e1; }
+    .card-code { font-family: 'JetBrains Mono', Consolas, Monaco, monospace; font-size: 11px; fill: #00F2FE; font-weight: 600; }
+    .arrow-text { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 11px; font-weight: 600; fill: #94a3b8; }
+  </style>
+
+  <!-- Background -->
+  <rect width="1120" height="780" rx="16" fill="url(#bgGradient)"/>
+  <rect width="1120" height="780" rx="16" fill="none" stroke="#1e293b" stroke-width="2"/>
+
+  <!-- Subtle Architectural Grid -->
+  <g opacity="0.04">
+    <path d="M 0,70 L 1120,70 M 0,140 L 1120,140 M 0,210 L 1120,210 M 0,280 L 1120,280 M 0,350 L 1120,350 M 0,420 L 1120,420 M 0,490 L 1120,490 M 0,560 L 1120,560 M 0,630 L 1120,630 M 0,700 L 1120,700" stroke="#00F2FE" stroke-width="1.5"/>
+    <path d="M 70,0 L 70,780 M 140,0 L 140,780 M 210,0 L 210,780 M 280,0 L 280,780 M 350,0 L 350,780 M 420,0 L 420,780 M 490,0 L 490,780 M 560,0 L 560,780 M 630,0 L 630,780 M 700,0 L 700,780 M 770,0 L 770,780 M 840,0 L 840,780 M 910,0 L 910,780 M 980,0 L 980,780 M 1050,0 L 1050,780" stroke="#00F2FE" stroke-width="1.5"/>
+  </g>
+
+  <!-- TOP HEADER -->
+  <g transform="translate(40, 28)">
+    <!-- Pill Badges -->
+    <rect x="0" y="0" width="130" height="24" rx="12" fill="#00F2FE" opacity="0.15"/>
+    <rect x="0" y="0" width="130" height="24" rx="12" fill="none" stroke="#00F2FE" stroke-width="1.2"/>
+    <text x="65" y="16" class="badge-label" text-anchor="middle" fill="#00F2FE">🛡️ CLOSED-LOOP SRE</text>
+
+    <rect x="140" y="0" width="130" height="24" rx="12" fill="#326CE5" opacity="0.15"/>
+    <rect x="140" y="0" width="130" height="24" rx="12" fill="none" stroke="#326CE5" stroke-width="1.2"/>
+    <text x="205" y="16" class="badge-label" text-anchor="middle" fill="#93c5fd">☸️ KUBERNETES 1.29</text>
+
+    <rect x="280" y="0" width="135" height="24" rx="12" fill="#E6522C" opacity="0.15"/>
+    <rect x="280" y="0" width="135" height="24" rx="12" fill="none" stroke="#E6522C" stroke-width="1.2"/>
+    <text x="347" y="16" class="badge-label" text-anchor="middle" fill="#fdba74">📈 PROMETHEUS ALERTS</text>
+
+    <rect x="425" y="0" width="125" height="24" rx="12" fill="#10B981" opacity="0.15"/>
+    <rect x="425" y="0" width="125" height="24" rx="12" fill="none" stroke="#10B981" stroke-width="1.2"/>
+    <text x="487" y="16" class="badge-label" text-anchor="middle" fill="#6ee7b7">⚡ CIRCUIT BREAKER</text>
+
+    <rect x="560" y="0" width="115" height="24" rx="12" fill="#8B5CF6" opacity="0.15"/>
+    <rect x="560" y="0" width="115" height="24" rx="12" fill="none" stroke="#8B5CF6" stroke-width="1.2"/>
+    <text x="617" y="16" class="badge-label" text-anchor="middle" fill="#c4b5fd">🤖 AIOps RCA</text>
+
+    <!-- Header Titles -->
+    <text x="0" y="62" class="main-title">AEGIS // Autonomous SRE &amp; AIOps Platform</text>
+    <text x="0" y="84" class="main-subtitle">Closed-Loop Incident Remediation, Circuit-Breaker Guardrails &amp; Telemetry Intelligence</text>
+  </g>
+
+  <!-- ZONE 1: WORKLOAD PLANE (LEFT) -->
+  <g transform="translate(40, 130)">
+    <rect width="280" height="610" rx="12" fill="#0b111e" stroke="#1e293b" stroke-width="1.5"/>
+    <text x="20" y="32" class="zone-title" fill="#00F2FE">1. WORKLOAD PLANE (K8S)</text>
+    <text x="20" y="48" class="card-txt" fill="#64748b">Namespace: production-apps</text>
+
+    <!-- NodePort Ingress -->
+    <g transform="translate(16, 65)">
+      <rect width="248" height="85" rx="8" fill="url(#cardGrad)" stroke="#334155" stroke-width="1" filter="url(#cardShadow)"/>
+      <text x="14" y="24" class="card-head">NodePort Service</text>
+      <text x="14" y="42" class="card-sub">Port 30080 ➔ 8000</text>
+      <text x="14" y="62" class="card-txt">Routes ingress &amp; chaos requests</text>
+      <text x="14" y="76" class="card-code">Node: aegis-core-service</text>
+    </g>
+
+    <!-- Pod Replica 1 -->
+    <g transform="translate(16, 170)">
+      <rect width="248" height="195" rx="8" fill="url(#cardGrad)" stroke="#00F2FE" stroke-width="1.5" filter="url(#cardShadow)"/>
+      <circle cx="230" cy="22" r="5" fill="#10B981"/>
+      <text x="14" y="26" class="card-head">Pod 1: aegis-core</text>
+      <text x="14" y="44" class="card-sub">UID: 10001 (Non-Root Sandbox)</text>
+      <line x1="14" y1="54" x2="234" y2="54" stroke="#1e293b" stroke-width="1"/>
+      
+      <text x="14" y="74" class="card-code">/healthz</text>
+      <text x="80" y="74" class="card-txt">Liveness (Auto Restart)</text>
+
+      <text x="14" y="96" class="card-code">/ready</text>
+      <text x="80" y="96" class="card-txt">Readiness (Traffic Shed)</text>
+
+      <text x="14" y="118" class="card-code">/metrics</text>
+      <text x="80" y="118" class="card-txt">Prometheus RED Metrics</text>
+
+      <text x="14" y="140" class="card-code">/chaos/*</text>
+      <text x="80" y="140" class="card-txt">OOM, Crash, Latency, CPU</text>
+
+      <rect x="14" y="156" width="220" height="24" rx="4" fill="#00F2FE" opacity="0.1"/>
+      <text x="124" y="172" class="card-code" text-anchor="middle" fill="#00F2FE">Resources: 64Mi / 256Mi Max</text>
+    </g>
+
+    <!-- Pod Replica 2 -->
+    <g transform="translate(16, 385)">
+      <rect width="248" height="195" rx="8" fill="url(#cardGrad)" stroke="#334155" stroke-width="1" filter="url(#cardShadow)"/>
+      <circle cx="230" cy="22" r="5" fill="#10B981"/>
+      <text x="14" y="26" class="card-head">Pod 2: aegis-core</text>
+      <text x="14" y="44" class="card-sub">UID: 10001 (Non-Root Sandbox)</text>
+      <line x1="14" y1="54" x2="234" y2="54" stroke="#1e293b" stroke-width="1"/>
+      
+      <text x="14" y="74" class="card-code">/healthz</text>
+      <text x="80" y="74" class="card-txt">Liveness (Auto Restart)</text>
+
+      <text x="14" y="96" class="card-code">/ready</text>
+      <text x="80" y="96" class="card-txt">Readiness (Traffic Shed)</text>
+
+      <text x="14" y="118" class="card-code">/metrics</text>
+      <text x="80" y="118" class="card-txt">Prometheus RED Metrics</text>
+
+      <text x="14" y="140" class="card-code">/chaos/*</text>
+      <text x="80" y="140" class="card-txt">OOM, Crash, Latency, CPU</text>
+
+      <rect x="14" y="156" width="220" height="24" rx="4" fill="#38bdf8" opacity="0.1"/>
+      <text x="124" y="172" class="card-code" text-anchor="middle" fill="#38bdf8">High Availability Quorum</text>
+    </g>
+  </g>
+
+  <!-- ZONE 2: OBSERVABILITY & DETECTION (MIDDLE-TOP) -->
+  <g transform="translate(345, 130)">
+    <rect width="360" height="280" rx="12" fill="#0b111e" stroke="#1e293b" stroke-width="1.5"/>
+    <text x="20" y="32" class="zone-title" fill="#F97316">2. OBSERVABILITY &amp; ALERT ENGINE</text>
+    <text x="20" y="48" class="card-txt" fill="#64748b">Namespace: aegis-system</text>
+
+    <!-- Prometheus Card -->
+    <g transform="translate(16, 65)">
+      <rect width="328" height="85" rx="8" fill="url(#cardGrad)" stroke="#F97316" stroke-width="1.2" filter="url(#cardShadow)"/>
+      <text x="14" y="24" class="card-head">Prometheus Telemetry Scraper</text>
+      <text x="14" y="42" class="card-sub">Scrapes /metrics every 10 seconds</text>
+      <text x="14" y="60" class="card-txt">• aegis_http_requests_total (RED metrics)</text>
+      <text x="14" y="74" class="card-txt">• aegis_process_memory_usage_mb &amp; CPU%</text>
+    </g>
+
+    <!-- Alertmanager Card -->
+    <g transform="translate(16, 165)">
+      <rect width="328" height="95" rx="8" fill="url(#cardGrad)" stroke="#EF4444" stroke-width="1.2" filter="url(#cardShadow)"/>
+      <text x="14" y="24" class="card-head">Alertmanager &amp; PromQL Rules</text>
+      <text x="14" y="42" class="card-sub">5 Evaluated Production Rules</text>
+      <text x="14" y="60" class="card-txt">• CrashLoopBackOff (&gt; 2 restarts in 5m)</text>
+      <text x="14" y="74" class="card-txt">• OOMKilled Container Detection (exit 137)</text>
+      <text x="14" y="88" class="card-code" fill="#f87171">POST /webhook/alert ➔ AEGIS Controller</text>
+    </g>
+  </g>
+
+  <!-- ZONE 3: AEGIS AUTONOMOUS CORE (MIDDLE-BOTTOM) -->
+  <g transform="translate(345, 430)">
+    <rect width="360" height="310" rx="12" fill="#0b111e" stroke="#1e293b" stroke-width="1.5"/>
+    <text x="20" y="32" class="zone-title" fill="#10B981">3. AUTONOMOUS SRE ENGINE</text>
+    <text x="20" y="48" class="card-txt" fill="#64748b">Controller: aegis-controller (Python + K8s SDK)</text>
+
+    <!-- Circuit Breaker -->
+    <g transform="translate(16, 65)">
+      <rect width="328" height="95" rx="8" fill="url(#cardGrad)" stroke="#10B981" stroke-width="1.5" filter="url(#cardShadow)"/>
+      <text x="14" y="24" class="card-head">Stateful Circuit Breaker Guardrail</text>
+      <text x="14" y="42" class="card-sub">Sliding-Window Anti-Flapping Engine</text>
+      <text x="14" y="60" class="card-txt">• Max 3 attempts per 10-minute window</text>
+      <text x="14" y="74" class="card-txt">• 25-second cooldown safety lock</text>
+      <text x="14" y="88" class="card-code" fill="#34d399">State: CLOSED (Safe) ➔ TRIPPED (Halt)</text>
+    </g>
+
+    <!-- K8s Patcher & Verifier -->
+    <g transform="translate(16, 175)">
+      <rect width="328" height="115" rx="8" fill="url(#cardGrad)" stroke="#3b82f6" stroke-width="1.2" filter="url(#cardShadow)"/>
+      <text x="14" y="24" class="card-head">K8s API Patcher &amp; Health Poller</text>
+      <text x="14" y="42" class="card-sub">Least-Privilege Scoped ClusterRole</text>
+      <text x="14" y="62" class="card-txt">• Patches restartedAt timestamp annotation</text>
+      <text x="14" y="76" class="card-txt">• Dynamic memory ceiling buffer adjustment</text>
+      <text x="14" y="90" class="card-txt">• Polls /healthz until 100% replicas healthy</text>
+      <text x="14" y="104" class="card-code" fill="#60a5fa">Benchmark MTTR: &lt; 25.0s Verified</text>
+    </g>
+  </g>
+
+  <!-- ZONE 4: SRE MISSION CONTROL & AIOPS (RIGHT) -->
+  <g transform="translate(730, 130)">
+    <rect width="350" height="610" rx="12" fill="#0b111e" stroke="#1e293b" stroke-width="1.5"/>
+    <text x="20" y="32" class="zone-title" fill="#8B5CF6">4. MISSION CONTROL &amp; AIOPS</text>
+    <text x="20" y="48" class="card-txt" fill="#64748b">Live Cloud UI: localhost:8080 &amp; Render</text>
+
+    <!-- Chaos Injection Cockpit -->
+    <g transform="translate(16, 65)">
+      <rect width="318" height="145" rx="8" fill="url(#cardGrad)" stroke="#8B5CF6" stroke-width="1.2" filter="url(#cardShadow)"/>
+      <text x="14" y="24" class="card-head">Chaos Injection Cockpit</text>
+      <text x="14" y="42" class="card-sub">Simulate Real Production Incidents</text>
+      
+      <rect x="14" y="52" width="140" height="34" rx="6" fill="#EF4444" opacity="0.15" stroke="#EF4444" stroke-width="1"/>
+      <text x="22" y="74" class="card-txt" fill="#f87171" font-weight="700">💣 Memory Leak</text>
+
+      <rect x="162" y="52" width="140" height="34" rx="6" fill="#EF4444" opacity="0.15" stroke="#EF4444" stroke-width="1"/>
+      <text x="170" y="74" class="card-txt" fill="#f87171" font-weight="700">💥 CrashLoop</text>
+
+      <rect x="14" y="96" width="140" height="34" rx="6" fill="#F59E0B" opacity="0.15" stroke="#F59E0B" stroke-width="1"/>
+      <text x="22" y="118" class="card-txt" fill="#fbbf24" font-weight="700">🔥 CPU Stress</text>
+
+      <rect x="162" y="96" width="140" height="34" rx="6" fill="#10B981" opacity="0.15" stroke="#10B981" stroke-width="1"/>
+      <text x="170" y="118" class="card-txt" fill="#34d399" font-weight="700">✨ Reset Baseline</text>
+    </g>
+
+    <!-- AIOps RCA Engine -->
+    <g transform="translate(16, 225)">
+      <rect width="318" height="185" rx="8" fill="url(#cardGrad)" stroke="#c084fc" stroke-width="1.2" filter="url(#cardShadow)"/>
+      <text x="14" y="24" class="card-head">AIOps Incident Intelligence</text>
+      <text x="14" y="42" class="card-sub">Automated Root-Cause Analysis (RCA)</text>
+      <line x1="14" y1="52" x2="304" y2="52" stroke="#1e293b" stroke-width="1"/>
+      <text x="14" y="72" class="card-txt">• Tails crashed pod stderr logs</text>
+      <text x="14" y="90" class="card-txt">• Correlates Prometheus metric spikes</text>
+      <text x="14" y="108" class="card-txt">• Generates millisecond event timeline</text>
+      <text x="14" y="126" class="card-txt">• Synthesizes Markdown Post-Mortem</text>
+      <rect x="14" y="142" width="290" height="30" rx="4" fill="#8B5CF6" opacity="0.15"/>
+      <text x="159" y="162" class="card-code" text-anchor="middle" fill="#c084fc">Output: SRE Post-Mortem #INC-4921</text>
+    </g>
+
+    <!-- Telemetry Radar & MTTR Gauge -->
+    <g transform="translate(16, 425)">
+      <rect width="318" height="155" rx="8" fill="url(#cardGrad)" stroke="#00F2FE" stroke-width="1.2" filter="url(#cardShadow)"/>
+      <text x="14" y="24" class="card-head">Telemetry Radar &amp; MTTR Gauge</text>
+      <text x="14" y="42" class="card-sub">Benchmarked Real-Time Analytics</text>
+      <text x="14" y="65" class="card-txt">Resident Memory: <tspan class="card-code" fill="#00F2FE">142.5 MB</tspan></text>
+      <text x="14" y="85" class="card-txt">CPU Utilization: <tspan class="card-code" fill="#00F2FE">14.2%</tspan></text>
+      <text x="14" y="105" class="card-txt">Benchmarked MTTR: <tspan class="card-code" fill="#10B981">&lt; 24.2 Seconds</tspan></text>
+      <rect x="14" y="118" width="290" height="24" rx="4" fill="#00F2FE" opacity="0.1"/>
+      <text x="159" y="134" class="card-code" text-anchor="middle" fill="#00F2FE">Autonomous Loop Active 24/7</text>
+    </g>
+  </g>
+
+  <!-- INTER-ZONE CONNECTING ARROWS & FLOWS -->
+  <g stroke-linecap="round">
+    <!-- Flow 1: Workload to Prometheus -->
+    <path d="M 320,300 L 345,210" fill="none" stroke="#F97316" stroke-width="2" stroke-dasharray="4,4"/>
+    <polygon points="345,206 348,214 340,212" fill="#F97316"/>
+
+    <!-- Flow 2: Alertmanager to Controller -->
+    <path d="M 525,390 L 525,430" fill="none" stroke="#EF4444" stroke-width="2.5"/>
+    <polygon points="525,434 521,424 529,424" fill="#EF4444"/>
+
+    <!-- Flow 3: Controller to Workload -->
+    <path d="M 345,600 L 320,480" fill="none" stroke="#00F2FE" stroke-width="2.5"/>
+    <polygon points="317,476 324,484 316,484" fill="#00F2FE"/>
+
+    <!-- Flow 4: Controller to AIOps -->
+    <path d="M 705,585 L 730,500" fill="none" stroke="#8B5CF6" stroke-width="2.5"/>
+    <polygon points="733,496 726,504 734,504" fill="#8B5CF6"/>
+
+    <!-- Flow 5: Chaos to Workload -->
+    <path d="M 730,200 C 600,100 400,100 320,230" fill="none" stroke="#EF4444" stroke-width="2" stroke-dasharray="5,5"/>
+    <polygon points="318,234 322,226 316,226" fill="#EF4444"/>
+  </g>
+</svg>
