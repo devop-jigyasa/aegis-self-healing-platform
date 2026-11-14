@@ -3,7 +3,8 @@
 # ⚡ AEGIS Self-Healing Platform
 ### **Autonomous Kubernetes SRE, Closed-Loop Incident Remediation & AIOps Telemetry Engine**
 
-[![Live Cloud Demo](https://img.shields.io/badge/Live_Demo-Online_(24%2F7)-00c58e?style=for-the-badge&logo=render&logoColor=white)](https://aegis-self-healing-platform.onrender.com)
+[![Live Cloud Demo](https://img.shields.io/badge/Live_Demo-Vercel_(24%2F7)-566D53?style=for-the-badge&logo=vercel&logoColor=white)](https://aegis-self-healing-platform-static.vercel.app/)
+[![Backend API Status](https://img.shields.io/badge/API_Engine-Render_Online-346170?style=for-the-badge&logo=render&logoColor=white)](https://aegis-self-healing-platform.onrender.com/healthz)
 [![GitHub Repository](https://img.shields.io/badge/GitHub_Repo-aegis--self--healing--platform-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/devop-jigyasa/aegis-self-healing-platform)
 
 <br/>
