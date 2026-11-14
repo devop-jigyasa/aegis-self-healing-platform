@@ -12,6 +12,7 @@ from typing import Dict, Any, List
 import psutil
 
 from fastapi import FastAPI, Response, status, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse, FileResponse
 from prometheus_client import (
@@ -26,6 +27,15 @@ app = FastAPI(
     title="AEGIS Core Microservice",
     description="Mission-critical cloud-native service with telemetry and chaos hooks",
     version="1.0.0",
+)
+
+# --- Enable Cross-Origin Resource Sharing (CORS) for Vercel Edge Frontend ---
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 # --- State Management & Chaos Flags ---

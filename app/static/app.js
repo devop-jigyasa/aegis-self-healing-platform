@@ -1,5 +1,10 @@
 // AEGIS Mission Control Client-Side Logic
 
+// Dynamically resolve API Base (supports both unified Render hosting and decoupled Vercel Edge frontend)
+const API_BASE = (window.location.hostname.includes("vercel.app") || window.location.hostname === "localhost") && window.location.port !== "8000"
+    ? (window.location.hostname === "localhost" ? "http://localhost:8000" : "https://aegis-self-healing-platform.onrender.com")
+    : "";
+
 let activeIncidentsCount = 0;
 let lastKnownMem = 0;
 let startTime = Date.now();
@@ -35,7 +40,7 @@ function addTimelineEvent(tag, tagClass, text) {
 // --- Fetch live telemetry ---
 async function fetchTelemetry() {
     try {
-        const res = await fetch('/api/status');
+        const res = await fetch(`${API_BASE}/api/status`);
         if (!res.ok) throw new Error('Unhealthy status returned');
         const data = await res.json();
 
@@ -137,7 +142,7 @@ async function triggerChaos(type) {
     addTimelineEvent(eventTag, eventClass, eventMsg);
 
     try {
-        const res = await fetch(url, { method: 'POST' });
+        const res = await fetch(`${API_BASE}${url}`, { method: 'POST' });
         const data = await res.json();
         
         // If crash was triggered, simulate autonomous detection in timeline
