@@ -315,14 +315,15 @@ terraform plan
 
 ## 🚀 Quickstart Guide
 
-### Option 1: Live Cloud Demo (Instant)
+### Option 1: Live Cloud Demo (Instant Edge Access)
 
-Access the live production deployment hosted 24/7 on Render:
+Access the live production deployment running on a high-availability decoupled topology:
 
-* **Mission Control UI:** [https://aegis-self-healing-platform.onrender.com](https://aegis-self-healing-platform.onrender.com)
-* **Liveness Probe:** [https://aegis-self-healing-platform.onrender.com/healthz](https://aegis-self-healing-platform.onrender.com/healthz)
-* **Readiness Probe:** [https://aegis-self-healing-platform.onrender.com/ready](https://aegis-self-healing-platform.onrender.com/ready)
-* **Prometheus Metrics:** [https://aegis-self-healing-platform.onrender.com/metrics](https://aegis-self-healing-platform.onrender.com/metrics)
+* **Mission Control UI (Vercel Global Edge):** [https://aegis-self-healing-platform-static.vercel.app](https://aegis-self-healing-platform-static.vercel.app/)
+* **Backend API Engine (Render 24/7):** [https://aegis-self-healing-platform.onrender.com](https://aegis-self-healing-platform.onrender.com)
+* **Liveness Probe Endpoint:** [`/healthz`](https://aegis-self-healing-platform.onrender.com/healthz)
+* **Readiness Probe Endpoint:** [`/ready`](https://aegis-self-healing-platform.onrender.com/ready)
+* **Prometheus Telemetry Scrape:** [`/metrics`](https://aegis-self-healing-platform.onrender.com/metrics)
 
 ---
 
@@ -403,7 +404,8 @@ curl http://localhost:8080/api/circuit-breaker
 
 * **GitHub:** [@devop-jigyasa](https://github.com/devop-jigyasa)
 * **Project Repository:** [aegis-self-healing-platform](https://github.com/devop-jigyasa/aegis-self-healing-platform)
-* **Live Deployment:** [aegis-self-healing-platform.onrender.com](https://aegis-self-healing-platform.onrender.com)
+* **Live Edge UI:** [aegis-self-healing-platform-static.vercel.app](https://aegis-self-healing-platform-static.vercel.app/)
+* **Backend API Engine:** [aegis-self-healing-platform.onrender.com](https://aegis-self-healing-platform.onrender.com)
 
 ---
 
