@@ -9,6 +9,17 @@ let activeIncidentsCount = 0;
 let lastKnownMem = 0;
 let startTime = Date.now();
 
+// --- XSS Sanitization Helper ---
+function escapeHtml(str) {
+    if (str === null || str === undefined) return '';
+    return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+}
+
 // --- Format helpers ---
 function formatUptime(seconds) {
     const hrs = Math.floor(seconds / 3600).toString().padStart(2, '0');
@@ -25,13 +36,14 @@ function getTimeString() {
 // --- Add event to SRE Timeline ---
 function addTimelineEvent(tag, tagClass, text) {
     const timeline = document.getElementById('timeline-list');
+    if (!timeline) return;
     const item = document.createElement('div');
     item.className = 'timeline-item';
     item.innerHTML = `
         <div class="time-marker mono">${getTimeString()}</div>
         <div class="time-content">
-            <span class="tag ${tagClass}">${tag}</span>
-            <p>${text}</p>
+            <span class="tag ${escapeHtml(tagClass)}">${escapeHtml(tag)}</span>
+            <p>${escapeHtml(text)}</p>
         </div>
     `;
     timeline.insertBefore(item, timeline.firstChild);
@@ -95,6 +107,19 @@ async function fetchTelemetry() {
             document.getElementById('incident-counter').style.color = 'var(--text-secondary)';
         }
 
+        // Check environment chaos status
+        const chaosPanel = document.querySelector('.chaos-panel') || document.querySelector('.card:has(button)');
+        if (data.chaos_enabled === false && chaosPanel) {
+            let notice = document.getElementById('chaos-disabled-notice');
+            if (!notice) {
+                notice = document.createElement('div');
+                notice.id = 'chaos-disabled-notice';
+                notice.style.cssText = 'background: rgba(255, 170, 0, 0.15); border: 1px solid #ffaa00; color: #ffaa00; padding: 8px 12px; border-radius: 4px; font-size: 0.8rem; margin-bottom: 12px;';
+                notice.innerText = 'Notice: Chaos simulation is disabled in this environment (CHAOS_ENABLED=false).';
+                chaosPanel.prepend(notice);
+            }
+        }
+
     } catch (err) {
         document.getElementById('health-val').innerText = "OFFLINE";
         document.getElementById('health-val').className = "kpi-val text-crimson";
@@ -142,7 +167,24 @@ async function triggerChaos(type) {
     addTimelineEvent(eventTag, eventClass, eventMsg);
 
     try {
-        const res = await fetch(`${API_BASE}${url}`, { method: 'POST' });
+        const res = await fetch(`${API_BASE}${url}`, {
+            method: 'POST',
+            headers: {
+                'X-Chaos-Secret': 'aegis-chaos-shared-secret-key-prod-2026'
+            }
+        });
+
+        if (res.status === 403) {
+            const err = await res.json().catch(() => ({}));
+            addTimelineEvent('CHAOS_DISABLED', 'tag-alert', err.error || 'Chaos simulation disabled in production (403 Forbidden).');
+            return;
+        }
+
+        if (res.status === 401) {
+            addTimelineEvent('AUTH_DENIED', 'tag-alert', 'Chaos simulation rejected: Invalid or missing X-Chaos-Secret (401 Unauthorized).');
+            return;
+        }
+
         await res.json();
     } catch (err) {
         console.error('Chaos execution error:', err);
@@ -198,15 +240,15 @@ async function fetchIncidents() {
             });
 
             const output = document.getElementById('aiops-content');
-            if (output && !output.innerHTML.includes(latest.incident_id)) {
+            if (output && !output.innerHTML.includes(escapeHtml(latest.incident_id))) {
                 output.innerHTML = `
                     <div style="color: var(--violet); font-weight: 700; margin-bottom: 8px;">
-                        ✧ Live AIOps Incident Analysis [${latest.incident_id}]
+                        ✦ Live AIOps Incident Analysis [${escapeHtml(latest.incident_id)}]
                     </div>
-                    <p><strong>Alert Triggered:</strong> <code>${latest.alert_name}</code></p>
-                    <p><strong>Resource:</strong> <code>${latest.resource}</code></p>
-                    <p><strong>Remediation Action:</strong> <code>${latest.remediation_action}</code></p>
-                    <p><strong>MTTR:</strong> <span class="mono text-cyan" style="font-weight:700;">${latest.mttr_seconds}s</span></p>
+                    <p><strong>Alert Triggered:</strong> <code>${escapeHtml(latest.alert_name)}</code></p>
+                    <p><strong>Resource:</strong> <code>${escapeHtml(latest.resource)}</code></p>
+                    <p><strong>Remediation Action:</strong> <code>${escapeHtml(latest.remediation_action)}</code></p>
+                    <p><strong>MTTR:</strong> <span class="mono text-cyan" style="font-weight:700;">${escapeHtml(latest.mttr_seconds)}s</span></p>
                 `;
             }
         }

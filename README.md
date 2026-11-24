@@ -41,10 +41,10 @@ In standard production environments, native container restarts are blind:
 **AEGIS resolves this through closed-loop autonomous SRE automation:**
 
 * **Sub-25-Second Autonomous MTTR:** Captures Prometheus alert webhooks, evaluates incident context against circuit breakers, executes targeted Kubernetes rolling rollouts or resource patches, and validates recovery in **under 25 seconds**.
-* **Distributed Circuit Breaker Guardrails:** Algorithmic sliding-window lock preventing flapping remediation loops from destabilizing cluster control planes.
-* **$0.00 Cloud Spend with Full AWS Parity:** Fully reproducible locally on **Docker Desktop & Kind** for zero cost, with modular **Terraform IaC** modeling enterprise AWS EKS, VPC, and IRSA architectures.
+* **Sliding-Window Circuit Breaker Guardrails:** Algorithmic sliding-window lock preventing flapping remediation loops from destabilizing cluster control planes.
+* **$0.00 Cloud Spend with Full AWS Parity:** Fully reproducible locally on **Docker Desktop & Kind** for zero cost, with modular **Terraform IaC** providing an architectural Terraform reference design for AWS EKS, VPC, and IRSA environments.
 * **Shift-Left DevSecOps Pipeline:** Automated GitHub Actions workflow enforcing Python static analysis (`flake8`), **Aqua Security Trivy** CVE & secret gates, and multi-stage non-root container sandboxing (`UID 10001`).
-* **Deep Observability & AIOps Telemetry:** Native Prometheus RED metrics (Rate, Errors, Duration), custom alert rules, and automated **Root Cause Analysis (RCA)** post-mortem generation.
+* **Deep Observability & AIOps Telemetry:** Native Prometheus RED metrics (Rate, Errors, Duration), custom alert rules, and signature-based **Root Cause Analysis (RCA)** post-mortem generation.
 
 ---
 
@@ -55,7 +55,7 @@ In standard production environments, native container restarts are blind:
 | **Incident Remediation** | Blind `kubelet` restarts causing `CrashLoopBackOff` | **Closed-loop remediation:** Intercepts Alertmanager webhooks, executes targeted patches, and verifies MTTR |
 | **Failure Safety** | Unchecked scripts causing infinite restart loops | **Stateful Circuit Breaker:** Sliding 10-minute window with anti-flapping trip logic and cooldown enforcement |
 | **Health Verification** | Assumes action succeeded without testing | **Active Probe Polling:** Continuously validates `/healthz` & `/ready` until 100% of replicas are healthy |
-| **Container Security** | Heavy root-user images with hundreds of CVEs | **Multi-stage Alpine build**, non-root user (`UID 10001`), **Aqua Trivy vulnerability scanning** |
+| **Container Security** | Heavy root-user images with hundreds of CVEs | **Multi-stage Debian-slim build**, non-root user (`UID 10001`), **Aqua Trivy vulnerability scanning** |
 | **Kubernetes RBAC** | Default unrestricted `cluster-admin` access | **Strict least-privilege `ClusterRole`** scoped exclusively to `patch`, `get`, and `list` verbs |
 | **Observability** | Basic console print logs | **Prometheus metrics endpoint** (`/metrics`), 5 PromQL alerting rules, Alertmanager webhook routing |
 | **AIOps Post-Mortems** | Manual post-incident documentation | **Automated RCA Engine:** Correlates pod stderr buffers and metric spikes into formatted Markdown post-mortems |
@@ -128,7 +128,7 @@ flowchart TD
 aegis-self-healing-platform/
 ├── .github/
 │   └── workflows/
-│       └── ci.yml                 # 5-Stage DevSecOps CI/CD Pipeline
+│       └── ci.yml                 # DevSecOps CI/CD Pipeline (Quality, Security, Manifests, Builds)
 ├── app/                           # Cloud-Native Microservice & Chaos Simulator
 │   ├── static/                    # Mission Control UI (Cockpit, Radar, Timeline)
 │   │   ├── index.html             # Real-time SRE telemetry dashboard
@@ -150,24 +150,33 @@ aegis-self-healing-platform/
 │       └── circuit-breaker.svg    # SRE Circuit Breaker Finite State Machine
 ├── k8s/                           # Production Kubernetes Manifests
 │   ├── base/
+│   │   ├── kustomization.yaml     # Kustomize manifest declaration
 │   │   ├── namespace.yaml         # Isolated namespaces (production-apps, aegis-system)
+│   │   ├── secrets.yaml           # Shared auth secrets for chaos & webhooks
 │   │   ├── rbac.yaml              # Scoped least-privilege ClusterRole & ServiceAccount
+│   │   ├── network-policy.yaml    # NetworkPolicy ingress/egress security boundaries
 │   │   ├── app-deployment.yaml    # RollingUpdate deployment with probes & non-root context
 │   │   ├── app-service.yaml       # NodePort & ClusterIP ingress service abstraction
 │   │   └── controller-deployment.yaml # Autonomous SRE daemon deployment
 │   └── monitoring/
+│       ├── monitoring-stack.yaml  # Standalone Prometheus & Alertmanager deployments
 │       ├── alert-rules.yaml       # 5 Production PromQL alerting rules (CrashLoop, OOM, Latency)
 │       └── alertmanager-config.yaml # Webhook routing configuration
+├── tests/                         # Automated Unit & Integration Test Suite
+│   ├── test_aiops.py              # AIOps RCA engine signature verification
+│   └── test_circuit_breaker.py    # Circuit breaker state transitions & cooldown tests
 ├── terraform/                     # Enterprise AWS Cloud Architecture IaC
-│   ├── main.tf                    # AWS Provider & State Backend definition
-│   ├── vpc.tf                     # Multi-AZ VPC with Public/Private Subnets & NAT Gateways
-│   ├── eks.tf                     # Amazon EKS Cluster with Managed Node Groups & IRSA
+│   ├── main.tf                    # AWS & TLS Provider configurations
+│   ├── vpc.tf                     # Multi-AZ VPC with Public/Private Subnets & NAT Gateway
+│   ├── eks.tf                     # Amazon EKS Cluster with Managed Node Groups & IRSA Role
+│   ├── outputs.tf                 # VPC, EKS, and Controller IRSA role ARNs
 │   └── variables.tf               # Parameterized cluster configurations
-├── scripts/                       # Automation & Chaos Tooling
-│   ├── setup-cluster.ps1          # 1-Click Kind cluster bootstrap & deployment script
-│   ├── inject-chaos.ps1           # Automated chaos injection test runner
-│   ├── cleanup.ps1                # Safe zero-trace resource tear-down script
+├── scripts/                       # Automation & Chaos Tooling (PowerShell & Bash)
+│   ├── setup-cluster.ps1 / .sh    # Kind cluster bootstrap & deployment scripts
+│   ├── inject-chaos.ps1 / .sh     # Automated chaos injection test runners
+│   ├── cleanup.ps1 / .sh          # Safe zero-trace resource tear-down scripts
 │   └── kind-config.yaml           # Kind cluster spec with port-mappings (30080 -> 8080)
+├── Makefile                       # Unified developer tasks (setup, test, lint, chaos)
 ├── reports/                       # Incident post-mortems & MTTR audit logs
 ├── .gitignore                     # Git tracking exclusions
 ├── LICENSE                        # MIT License
@@ -188,11 +197,10 @@ The `.github/workflows/ci.yml` pipeline triggers automatically on every push or 
 
 | Stage | Tooling | Scope | Security & Quality Gate |
 | :---: | :---: | :---: | :--- |
-| **1. Code Quality** | `flake8` | Microservice & SRE Controller | Zero syntax or PEP8 violations; strict lint verification |
+| **1. Code Quality & Tests** | `flake8` & `pytest` | Python services & test suite | Zero syntax/PEP8 violations; 100% automated test suite passing |
 | **2. Security Gate** | `Aqua Security Trivy` | Source code & dependencies | Scans filesystem for CVEs, exposed secrets & misconfigurations |
-| **3. Container Hardening** | `Docker Buildx` | Multi-stage image build | Minimal attack surface, unprivileged execution (`UID 10001`) |
-| **4. Manifest Validation** | `kubectl / dry-run` | Kubernetes manifests (`k8s/`) | Schema conformance, RBAC least-privilege validation |
-| **5. Continuous Delivery** | `Cloud GitOps` | Production live deployment | Automated rolling delivery to 24/7 live cloud preview |
+| **3. Manifest Validation** | `kubectl / dry-run` | Kubernetes manifests (`k8s/`) | Schema conformance & RBAC least-privilege dry-run verification |
+| **4. Container Hardening** | `Docker Buildx` | Multi-stage image builds | Minimal attack surface, non-root execution (`UID 10001 / 10002`) |
 
 ---
 
@@ -237,7 +245,7 @@ Every failure archetype in AEGIS is monitored via PromQL, resolved autonomously,
 | **HTTP 500 Cascade** | `rate(status="500") / rate(total) > 0.05` | Sheds traffic via `/ready` probe & initiates rollout undo | **12.3s** |
 | **Latency SLO Breach** | `histogram_quantile(0.95, duration) > 1.5s` | Isolates degraded pods & redistributes traffic to healthy nodes | **16.1s** |
 
-### Distributed Circuit Breaker Engine
+### Sliding-Window Circuit Breaker Engine
 
 Autonomous remediation requires safeguards against cascading failure loops. If an application contains an unrecoverable bug, continuous remediation attempts will saturate the cluster control plane:
 
@@ -309,7 +317,7 @@ terraform validate
 terraform plan
 ```
 
-> **Enterprise Architecture:** Deploys a Multi-AZ VPC (3 Public, 3 Private Subnets), an Amazon EKS v1.29 cluster with Managed Node Groups, and IAM Roles for Service Accounts (IRSA) for least-privilege pod identities.
+> **Enterprise Architecture:** Deploys a Multi-AZ VPC (2 Public, 2 Private Subnets across Multi-AZ), an Amazon EKS v1.29 cluster with Managed Node Groups, and IAM Roles for Service Accounts (IRSA) for least-privilege pod identities.
 
 ---
 
@@ -334,12 +342,16 @@ Access the live production deployment running on a high-availability decoupled t
 * PowerShell 5.1+ / 7+ (Windows) or Bash (Linux/macOS)
 
 #### 1. Clone & Bootstrap Cluster
-```powershell
+```bash
 git clone https://github.com/devop-jigyasa/aegis-self-healing-platform.git
 cd aegis-self-healing-platform
 
-# Bootstrap Kind cluster, namespaces, RBAC, Prometheus & AEGIS controllers
+# Windows (PowerShell):
 .\scripts\setup-cluster.ps1
+
+# Linux / macOS (Bash or Make):
+bash scripts/setup-cluster.sh
+# or: make setup
 ```
 
 #### 2. Access Local Endpoints
@@ -352,17 +364,25 @@ cd aegis-self-healing-platform
 | **Prometheus Telemetry** | `http://localhost:8080/metrics` | Real-time RED metrics scrape endpoint |
 
 #### 3. Inject Chaos & Observe Self-Healing
-```powershell
-# Simulate Memory Leak / OOMKill failure
+```bash
+# Windows (PowerShell):
 .\scripts\inject-chaos.ps1 -Scenario oom
-
-# Simulate Unhandled Exception / CrashLoopBackOff
 .\scripts\inject-chaos.ps1 -Scenario crashloop
+
+# Linux / macOS (Bash or Make):
+bash scripts/inject-chaos.sh oom
+bash scripts/inject-chaos.sh crash
+# or: make chaos-oom / make chaos-crash
 ```
 
 #### 4. Clean Teardown
-```powershell
+```bash
+# Windows (PowerShell):
 .\scripts\cleanup.ps1
+
+# Linux / macOS (Bash or Make):
+bash scripts/cleanup.sh
+# or: make clean
 ```
 
 ---
@@ -382,13 +402,16 @@ The platform integrates native Prometheus instrumentation:
 ## 🧪 Testing & Validation Commands
 
 ```bash
+# Run automated test suite
+pytest tests/ -v
+
 # Run Flake8 static analysis & style verification
-flake8 app controller
+flake8 app/ controller/ tests/ --count --max-line-length=135
 
 # Run Trivy security scan locally
 trivy fs .
 
-# Validate Kubernetes manifests dry-run
+# Validate Kubernetes manifests dry-run (via Kustomize)
 kubectl apply --dry-run=client -k k8s/base/
 
 # Inspect circuit-breaker status

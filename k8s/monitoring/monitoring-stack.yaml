@@ -26,10 +26,15 @@ spec:
           volumeMounts:
             - name: prometheus-config-volume
               mountPath: /etc/prometheus/
+            - name: prometheus-rules-volume
+              mountPath: /etc/prometheus/rules/
       volumes:
         - name: prometheus-config-volume
           configMap:
             name: prometheus-config
+        - name: prometheus-rules-volume
+          configMap:
+            name: prometheus-rules
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -43,7 +48,7 @@ data:
       evaluation_interval: 10s
 
     rule_files:
-      - /etc/prometheus/alert-rules.yaml
+      - /etc/prometheus/rules/alert-rules.yaml
 
     alerting:
       alertmanagers:
@@ -54,6 +59,78 @@ data:
       - job_name: 'aegis-core'
         static_configs:
           - targets: ['aegis-core-service.production-apps.svc.cluster.local:8000']
+            labels:
+              namespace: 'production-apps'
+              deployment: 'aegis-core'
+
+      - job_name: 'kube-state-metrics'
+        static_configs:
+          - targets: ['kube-state-metrics.aegis-system.svc.cluster.local:8080']
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: prometheus-rules
+  namespace: aegis-system
+data:
+  alert-rules.yaml: |
+    groups:
+      - name: aegis_sre_alerts
+        rules:
+          - alert: AegisPodCrashLooping
+            expr: rate(kube_pod_container_status_restarts_total{namespace="production-apps"}[5m]) * 60 > 2
+            for: 30s
+            labels:
+              severity: critical
+              deployment: aegis-core
+              namespace: production-apps
+            annotations:
+              summary: "AEGIS Pod is crash-looping in production-apps"
+              description: "Pod {{ $labels.pod }} restarted more than 2 times in 5 minutes."
+
+          - alert: AegisContainerOOMKilled
+            expr: kube_pod_container_status_last_terminated_reason{reason="OOMKilled",namespace="production-apps"} == 1
+            for: 0s
+            labels:
+              severity: critical
+              deployment: aegis-core
+              namespace: production-apps
+            annotations:
+              summary: "AEGIS Container was terminated due to OOMKill"
+              description: "Container in pod {{ $labels.pod }} exceeded memory limit."
+
+          - alert: AegisHighCPUUsage
+            expr: aegis_process_cpu_usage_percent > 85
+            for: 1m
+            labels:
+              severity: warning
+              deployment: aegis-core
+              namespace: production-apps
+            annotations:
+              summary: "AEGIS CPU Saturation Exceeded 85%"
+              description: "Workload CPU utilization sustained above 85% for 1m."
+
+          - alert: AegisHighErrorRate
+            expr: sum(rate(aegis_http_requests_total{status_code="500"}[2m])) / sum(rate(aegis_http_requests_total[2m])) > 0.05
+            for: 1m
+            labels:
+              severity: warning
+              deployment: aegis-core
+              namespace: production-apps
+            annotations:
+              summary: "AEGIS High HTTP 500 Error Cascade"
+              description: "500 Error rate is greater than 5% over 2 minutes."
+
+          - alert: AegisLatencySLOBreach
+            expr: histogram_quantile(0.95, sum(rate(aegis_http_request_duration_seconds_bucket[5m])) by (le)) > 1.5
+            for: 1m
+            labels:
+              severity: warning
+              deployment: aegis-core
+              namespace: production-apps
+            annotations:
+              summary: "AEGIS p95 Latency SLO breached"
+              description: "p95 request duration exceeded 1.5s."
 ---
 apiVersion: v1
 kind: Service
@@ -119,6 +196,10 @@ data:
         webhook_configs:
           - url: 'http://aegis-controller.aegis-system.svc.cluster.local:5000/webhook/alert'
             send_resolved: true
+            http_config:
+              authorization:
+                type: Bearer
+                credentials: 'aegis-webhook-shared-secret-key-prod-2026'
 ---
 apiVersion: v1
 kind: Service
@@ -131,3 +212,75 @@ spec:
   ports:
     - port: 9093
       targetPort: 9093
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kube-state-metrics
+  namespace: aegis-system
+  labels:
+    app: kube-state-metrics
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kube-state-metrics
+  template:
+    metadata:
+      labels:
+        app: kube-state-metrics
+    spec:
+      serviceAccountName: kube-state-metrics
+      containers:
+        - name: kube-state-metrics
+          image: registry.k8s.io/kube-state-metrics/kube-state-metrics:v2.9.2
+          ports:
+            - containerPort: 8080
+              name: http-metrics
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kube-state-metrics
+  namespace: aegis-system
+  labels:
+    app: kube-state-metrics
+spec:
+  type: ClusterIP
+  ports:
+    - name: http-metrics
+      port: 8080
+      targetPort: 8080
+  selector:
+    app: kube-state-metrics
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: kube-state-metrics
+  namespace: aegis-system
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: kube-state-metrics
+rules:
+  - apiGroups: [""]
+    resources: ["pods", "nodes", "services", "namespaces"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: ["apps"]
+    resources: ["deployments", "statefulsets", "replicasets"]
+    verbs: ["get", "list", "watch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: kube-state-metrics
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: kube-state-metrics
+subjects:
+  - kind: ServiceAccount
+    name: kube-state-metrics
+    namespace: aegis-system

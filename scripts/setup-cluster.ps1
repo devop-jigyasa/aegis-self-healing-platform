@@ -51,11 +51,14 @@ Write-Host "[5/6] Loading images into Kind cluster..." -ForegroundColor Yellow
 # 6. Apply manifests & monitoring stack
 Write-Host "[6/6] Applying Kubernetes manifests, RBAC & Monitoring Stack..." -ForegroundColor Yellow
 kubectl apply -f "$repoRoot\k8s\base\namespace.yaml"
+kubectl apply -f "$repoRoot\k8s\base\secrets.yaml"
 kubectl apply -f "$repoRoot\k8s\base\rbac.yaml"
+kubectl apply -f "$repoRoot\k8s\base\network-policy.yaml"
 kubectl apply -f "$repoRoot\k8s\base\app-deployment.yaml"
 kubectl apply -f "$repoRoot\k8s\base\app-service.yaml"
 kubectl apply -f "$repoRoot\k8s\base\controller-deployment.yaml"
 kubectl apply -f "$repoRoot\k8s\monitoring\monitoring-stack.yaml"
+kubectl apply -f "$repoRoot\k8s\monitoring\alert-rules.yaml"
 
 Write-Host "Waiting for deployments to roll out..." -ForegroundColor Yellow
 kubectl rollout status deployment/aegis-core -n production-apps --timeout=90s

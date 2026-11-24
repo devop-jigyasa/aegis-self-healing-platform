@@ -23,9 +23,11 @@ function Show-Menu {
 
 function Execute-Chaos($endpoint) {
     $url = "http://localhost:8080/chaos/$endpoint"
-    Write-Host "Sending POST request to $url..." -ForegroundColor Cyan
+    $secret = if ($env:CHAOS_SECRET) { $env:CHAOS_SECRET } else { "aegis-chaos-shared-secret-key-prod-2026" }
+    Write-Host "Sending authenticated POST request to $url..." -ForegroundColor Cyan
     try {
-        $response = Invoke-RestMethod -Uri $url -Method Post
+        $headers = @{ "X-Chaos-Secret" = $secret }
+        $response = Invoke-RestMethod -Uri $url -Method Post -Headers $headers
         Write-Host "Response received:" -ForegroundColor Green
         $response | ConvertTo-Json -Depth 3 | Write-Host
     } catch {

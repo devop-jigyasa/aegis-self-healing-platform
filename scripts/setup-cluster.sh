@@ -45,11 +45,14 @@ kind load docker-image aegis-controller:1.0.0 --name aegis-cluster
 # 6. Apply manifests & monitoring stack
 echo "[6/6] Applying Kubernetes manifests, RBAC & Monitoring Stack..."
 kubectl apply -f "${REPO_ROOT}/k8s/base/namespace.yaml"
+kubectl apply -f "${REPO_ROOT}/k8s/base/secrets.yaml"
 kubectl apply -f "${REPO_ROOT}/k8s/base/rbac.yaml"
+kubectl apply -f "${REPO_ROOT}/k8s/base/network-policy.yaml"
 kubectl apply -f "${REPO_ROOT}/k8s/base/app-deployment.yaml"
 kubectl apply -f "${REPO_ROOT}/k8s/base/app-service.yaml"
 kubectl apply -f "${REPO_ROOT}/k8s/base/controller-deployment.yaml"
 kubectl apply -f "${REPO_ROOT}/k8s/monitoring/monitoring-stack.yaml"
+kubectl apply -f "${REPO_ROOT}/k8s/monitoring/alert-rules.yaml"
 
 echo "Waiting for deployments to roll out..."
 kubectl rollout status deployment/aegis-core -n production-apps --timeout=90s

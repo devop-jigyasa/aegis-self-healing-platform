@@ -16,7 +16,6 @@ env/
 .terraform/
 *.tfstate
 *.tfstate.*
-.terraform.lock.hcl
 
 # OS specific
 Thumbs.db

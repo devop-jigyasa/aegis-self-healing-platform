@@ -1,12 +1,15 @@
 # 📑 SRE Incident Post-Mortem: INC-4922
 
+> [!NOTE]
+> **Illustrative SRE Post-Mortem Sample:** This document serves as an architectural benchmark post-mortem recording the closed-loop autonomous remediation flow of `AegisPodCrashLooping`.
+
 | Attribute | Value |
 | :--- | :--- |
 | **Incident ID** | `INC-4922` |
 | **Severity Level** | **SEV-2 (Process Instability & Error Surge)** |
 | **Affected Workload** | `production-apps/aegis-core` |
 | **Target Deployment** | `Deployment/aegis-core` (2 Replicas) |
-| **Failure Classification** | `PodCrashLoopBackOff` (Exit Code `1`) |
+| **Failure Classification** | `AegisPodCrashLooping` (Exit Code `1`) |
 | **Trigger Mechanism** | Unhandled Process SIGABRT / Panic via Chaos Cockpit |
 | **Remediation Strategy** | Autonomous Pod Rollout Patch via `restartedAt` Annotation & Quorum Verification |
 | **Circuit Breaker Status** | `CLOSED` (Attempt `2/3` in 600s sliding window) |
@@ -20,8 +23,8 @@
 On October 20, 2026, at 14:42:15 UTC, the `aegis-core` workload experienced an unhandled runtime exception and fatal process termination (`SIGABRT`, exit code `1`). Upon initial container death, `kubelet` attempted an immediate local restart; however, corrupted thread state induced a secondary restart within 30 seconds, triggering an impending **`CrashLoopBackOff`** condition.
 
 The **AEGIS Autonomous SRE Controller** resolved the failure pattern automatically:
-1. Intercepted the Prometheus `CrashLoopBackOff` early-warning alert.
-2. Queried the Distributed Circuit Breaker guardrail (Action count: `2/3`, cooldown elapsed: `1,453s`, state: `CLOSED`).
+1. Intercepted the Prometheus `AegisPodCrashLooping` early-warning alert.
+2. Queried the Sliding-Window Circuit Breaker guardrail (Action count: `2/3`, cooldown elapsed: `1,453s`, state: `CLOSED`).
 3. Injected a cryptographic timestamp annotation (`kubectl.kubernetes.io/restartedAt: 2026-10-20T14:42:25Z`) into the Deployment PodTemplateSpec, forcing a clean, graceful rolling replacement.
 4. Leveraged rolling update constraints (`maxSurge: 1`, `maxUnavailable: 0`) to maintain uninterrupted service quorum.
 5. Continuously polled the `/healthz` and `/ready` probes of the new replacement pods until 100% quorum availability was confirmed.
@@ -34,15 +37,16 @@ Total Mean Time to Recovery (MTTR) was benchmarked at **18.2 seconds**, restorin
 
 ### Prometheus Alert Rule Triggered
 ```yaml
-- alert: CrashLoopBackOffDetected
-  expr: rate(kube_pod_container_status_restarts_total{namespace="production-apps", container="aegis-core"}[5m]) * 60 > 2
-  for: 5s
+- alert: AegisPodCrashLooping
+  expr: rate(kube_pod_container_status_restarts_total{namespace="production-apps"}[5m]) * 60 > 2
+  for: 30s
   labels:
     severity: critical
-    tier: production
+    deployment: aegis-core
+    namespace: production-apps
   annotations:
-    summary: "Rapid container restart flapping detected"
-    description: "Container aegis-core restarted >2 times in 5m. Autonomous rollout patch initiated."
+    summary: "AEGIS Pod is crash-looping in production-apps"
+    description: "Pod {{ $labels.pod }} restarted more than 2 times in 5 minutes."
 ```
 
 ### Telemetry Signals at Incident Inception
@@ -56,7 +60,7 @@ Total Mean Time to Recovery (MTTR) was benchmarked at **18.2 seconds**, restorin
 ## ⏱️ Chronological Incident Timeline
 
 ```text
-[T+00.00s] 14:42:15.200 - Fatal SIGABRT chaos trigger dispatched to /chaos/crashloop endpoint.
+[T+00.00s] 14:42:15.200 - Fatal SIGABRT chaos trigger dispatched to /chaos/crash endpoint.
 [T+01.40s] 14:42:16.600 - Main process exits with code 1. Kubelet increments restart counter.
 [T+05.80s] 14:42:21.000 - Secondary restart fails. Backoff timer increases to 20 seconds.
 [T+07.10s] 14:42:22.300 - Prometheus evaluates restart rate > 2 restarts/min; alert CrashLoopBackOffDetected fires.

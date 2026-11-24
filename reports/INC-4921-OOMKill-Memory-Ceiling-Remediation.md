@@ -1,12 +1,15 @@
 # 📑 SRE Incident Post-Mortem: INC-4921
 
+> [!NOTE]
+> **Illustrative SRE Post-Mortem Sample:** This document serves as an architectural benchmark post-mortem recording the closed-loop autonomous remediation flow of `AegisContainerOOMKilled`.
+
 | Attribute | Value |
 | :--- | :--- |
 | **Incident ID** | `INC-4921` |
 | **Severity Level** | **SEV-2 (High Availability Risk)** |
 | **Affected Workload** | `production-apps/aegis-core` |
 | **Target Deployment** | `Deployment/aegis-core` (2 Replicas) |
-| **Failure Classification** | `ContainerOOMKilled` (Exit Code `137`) |
+| **Failure Classification** | `AegisContainerOOMKilled` (Exit Code `137`) |
 | **Trigger Mechanism** | Rapid Heap Leak Simulation via Chaos Cockpit |
 | **Remediation Strategy** | Autonomous Dynamic Memory Limit Expansion (+25% Buffer) & Rolling Pod Replacement |
 | **Circuit Breaker Status** | `CLOSED` (Attempt `1/3` in 600s sliding window) |
@@ -20,8 +23,8 @@
 On October 20, 2026, at 14:18:02 UTC, the `aegis-core` microservice in namespace `production-apps` suffered an acute memory exhaustion event. The container resident memory exceeded its configured cgroup ceiling of `256Mi`, inducing a Linux kernel Out-Of-Memory (OOM) killer termination with exit code `137`.
 
 Instead of permitting uncoordinated `kubelet` restarts that lead to `CrashLoopBackOff` flapping, the **AEGIS Autonomous SRE Controller**:
-1. Intercepted the Prometheus `ContainerOOMKilled` Alertmanager webhook.
-2. Verified safety guardrails via the Distributed Circuit Breaker (`CLOSED` state, 25s cooldown cleared).
+1. Intercepted the Prometheus `AegisContainerOOMKilled` Alertmanager webhook.
+2. Verified safety guardrails via the Sliding-Window Circuit Breaker (`CLOSED` state, 25s cooldown cleared).
 3. Dynamically patched the Kubernetes Deployment specification to scale the memory limit by **+25% (256Mi ➔ 320Mi)**.
 4. Coordinated a zero-downtime rolling restart (`maxSurge: 1`, `maxUnavailable: 0`).
 5. Polled `/healthz` and `/ready` probes across all replicas until 100% availability was confirmed.
@@ -34,15 +37,16 @@ Total Mean Time to Recovery (MTTR) was benchmarked at **24.5 seconds**, with zer
 
 ### Prometheus Alert Rule Triggered
 ```yaml
-- alert: ContainerOOMKilled
-  expr: kube_pod_container_status_last_terminated_reason{namespace="production-apps", container="aegis-core"} == 1
-  for: 5s
+- alert: AegisContainerOOMKilled
+  expr: kube_pod_container_status_last_terminated_reason{reason="OOMKilled", namespace="production-apps"} == 1
+  for: 0s
   labels:
     severity: critical
-    tier: production
+    deployment: aegis-core
+    namespace: production-apps
   annotations:
-    summary: "Container aegis-core was OOMKilled (Exit Code 137)"
-    description: "Pod {{ $labels.pod }} exceeded memory limit. Immediate SRE remediation dispatched."
+    summary: "AEGIS Container was terminated due to OOMKill"
+    description: "Container in pod {{ $labels.pod }} exceeded memory limit."
 ```
 
 ### Telemetry Signals at Incident Inception

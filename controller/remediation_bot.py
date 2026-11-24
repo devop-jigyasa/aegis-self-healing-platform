@@ -8,6 +8,7 @@ import os
 import re
 import json
 import time
+import hmac
 import asyncio
 import logging
 from typing import Dict, Any
@@ -297,16 +298,32 @@ def get_circuit_breaker_status(resource: str = "production-apps/aegis-core"):
 @app.post("/webhook/alert")
 async def alertmanager_webhook(request: Request):
     """Webhook listener invoked by Prometheus Alertmanager."""
-    if WEBHOOK_SECRET:
-        token = request.headers.get("X-Webhook-Secret") or request.headers.get("Authorization")
-        expected_bearer = f"Bearer {WEBHOOK_SECRET}"
-        if token != WEBHOOK_SECRET and token != expected_bearer:
-            logger.warning("Rejected unauthorized webhook request: missing or invalid secret")
-            return Response(
-                content=json.dumps({"error": "Unauthorized: Invalid or missing X-Webhook-Secret"}),
-                status_code=401,
-                media_type="application/json",
-            )
+    if not WEBHOOK_SECRET:
+        logger.error("Rejected webhook: WEBHOOK_SECRET environment variable is missing on controller")
+        return Response(
+            content=json.dumps({"error": "Unauthorized: Controller webhook authentication not configured"}),
+            status_code=401,
+            media_type="application/json",
+        )
+
+    auth_header = request.headers.get("Authorization", "")
+    secret_header = request.headers.get("X-Webhook-Secret", "")
+    expected_bearer = f"Bearer {WEBHOOK_SECRET}"
+
+    is_valid = False
+    if secret_header and hmac.compare_digest(secret_header, WEBHOOK_SECRET):
+        is_valid = True
+    elif auth_header:
+        if hmac.compare_digest(auth_header, WEBHOOK_SECRET) or hmac.compare_digest(auth_header, expected_bearer):
+            is_valid = True
+
+    if not is_valid:
+        logger.warning("Rejected unauthorized webhook request: missing or invalid secret")
+        return Response(
+            content=json.dumps({"error": "Unauthorized: Invalid or missing X-Webhook-Secret / Authorization"}),
+            status_code=401,
+            media_type="application/json",
+        )
 
     alert_start_time = time.time()
     payload = await request.json()

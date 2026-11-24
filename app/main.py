@@ -7,6 +7,7 @@ dynamic health/readiness probes, and controlled failure/chaos simulation.
 import os
 import time
 import socket
+import hmac
 import asyncio
 import threading
 from typing import List
@@ -28,22 +29,6 @@ app = FastAPI(
     title="AEGIS Core Microservice",
     description="Mission-critical cloud-native service with telemetry and chaos hooks",
     version="1.0.0",
-)
-
-# --- Enable Cross-Origin Resource Sharing (CORS) with Explicit Production Origins ---
-ALLOWED_ORIGINS = [
-    "https://aegis-self-healing-platform-static.vercel.app",
-    "https://aegis-self-healing-platform.onrender.com",
-    "http://localhost:8080",
-    "http://localhost:8000",
-]
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=ALLOWED_ORIGINS,
-    allow_credentials=False,
-    allow_methods=["GET", "POST", "OPTIONS"],
-    allow_headers=["*"],
 )
 
 # --- State Management & Chaos Flags ---
@@ -91,11 +76,28 @@ REMEDIATION_ACTIONS_TOTAL = Counter(
 )
 
 # System and probe endpoints that must never be disrupted by application chaos (Defect B5)
-PROBE_AND_SYSTEM_ENDPOINTS = {"/healthz", "/ready", "/metrics", "/api/status", "/api/circuit-breaker"}
+PROBE_AND_SYSTEM_ENDPOINTS = {
+    "/healthz",
+    "/ready",
+    "/metrics",
+    "/api/status",
+    "/api/circuit-breaker",
+    "/api/incidents",
+}
+
+CORS_HEADERS = {
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Methods": "*",
+    "Access-Control-Allow-Headers": "*",
+}
 
 
 @app.middleware("http")
 async def monitor_requests(request, call_next):
+    # Preflight OPTIONS requests must immediately pass through to CORSMiddleware
+    if request.method == "OPTIONS":
+        return await call_next(request)
+
     start_time = time.time()
     endpoint = request.url.path
 
@@ -106,15 +108,21 @@ async def monitor_requests(request, call_next):
                 content='{"error": "Forbidden: Chaos engineering endpoints disabled (CHAOS_ENABLED=false)"}',
                 status_code=403,
                 media_type="application/json",
+                headers=CORS_HEADERS,
             )
         if CHAOS_SECRET:
             token = request.headers.get("X-Chaos-Secret") or request.headers.get("Authorization")
             expected_bearer = f"Bearer {CHAOS_SECRET}"
-            if token != CHAOS_SECRET and token != expected_bearer:
+            is_valid = False
+            if token:
+                if hmac.compare_digest(token, CHAOS_SECRET) or hmac.compare_digest(token, expected_bearer):
+                    is_valid = True
+            if not is_valid:
                 return Response(
                     content='{"error": "Unauthorized: Invalid or missing X-Chaos-Secret"}',
                     status_code=401,
                     media_type="application/json",
+                    headers=CORS_HEADERS,
                 )
 
     # Defect B5 Fix: Ensure health and observability probes bypass synthetic chaos simulation
@@ -130,6 +138,7 @@ async def monitor_requests(request, call_next):
                 content='{"error": "Simulated Chaos HTTP 500 Cascade"}',
                 status_code=500,
                 media_type="application/json",
+                headers=CORS_HEADERS,
             )
 
     response = await call_next(request)
@@ -139,6 +148,26 @@ async def monitor_requests(request, call_next):
     REQUEST_COUNT.labels(method=request.method, endpoint=endpoint, status_code=response.status_code).inc()
     REQUEST_LATENCY.observe(duration)
     return response
+
+
+# --- Register CORSMiddleware as the LAST (outermost) middleware ---
+ALLOWED_ORIGINS = [
+    "https://aegis-self-healing-platform-static.vercel.app",
+    "https://aegis-self-healing-platform.onrender.com",
+    "http://localhost:8080",
+    "http://localhost:8000",
+    "http://localhost:3000",
+    "http://127.0.0.1:8080",
+    "http://127.0.0.1:8000",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=ALLOWED_ORIGINS,
+    allow_credentials=False,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 # --- Background Telemetry Thread ---
@@ -191,7 +220,7 @@ def ready():
 # --- Circuit Breaker API Endpoint ---
 @app.get("/api/circuit-breaker")
 def get_circuit_breaker():
-    """Returns the circuit breaker status payload for the production workload."""
+    """Returns the circuit breaker status payload by proxying to the controller."""
     import urllib.request
     import json
     controller_url = "http://aegis-controller.aegis-system.svc.cluster.local:5000/api/circuit-breaker"
@@ -199,18 +228,29 @@ def get_circuit_breaker():
         req = urllib.request.Request(controller_url, headers={"User-Agent": "aegis-core"})
         with urllib.request.urlopen(req, timeout=1.5) as resp:
             return json.loads(resp.read().decode())
-    except Exception:
-        return {
-            "resource": "production-apps/aegis-core",
-            "state": "CLOSED",
-            "attempts_in_window": 0,
-            "max_attempts": 3,
-            "window_seconds": 600,
-            "cooldown_seconds": 25,
-            "last_action_timestamp": 0.0,
-            "seconds_since_last_action": None,
-            "mode": "autonomous-guardrail",
-        }
+    except Exception as exc:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail=f"Remediation controller circuit-breaker unavailable: {exc}",
+        )
+
+
+# --- Live Incident Audit Stream API Endpoint ---
+@app.get("/api/incidents")
+def get_incidents():
+    """Proxy live incident audit stream and RCA telemetry from the remediation controller."""
+    import urllib.request
+    import json
+    controller_url = "http://aegis-controller.aegis-system.svc.cluster.local:5000/api/incidents"
+    try:
+        req = urllib.request.Request(controller_url, headers={"User-Agent": "aegis-core"})
+        with urllib.request.urlopen(req, timeout=1.5) as resp:
+            return json.loads(resp.read().decode())
+    except Exception as exc:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail=f"Remediation controller incident telemetry unavailable: {exc}",
+        )
 
 
 # --- Chaos Simulation Control Endpoints ---
@@ -295,6 +335,8 @@ def get_status():
         "memory_mb": round(process.memory_info().rss / (1024 * 1024), 2),
         "cpu_percent": round(process.cpu_percent(interval=None), 2),
         "chaos_state": _chaos_state,
+        "chaos_enabled": CHAOS_ENABLED,
+        "chaos_auth_required": bool(CHAOS_SECRET),
         "system_cores": psutil.cpu_count(),
         "timestamp": time.time(),
     }

@@ -6,8 +6,9 @@ BASE_URL="http://localhost:8080/chaos"
 
 execute_chaos() {
     local endpoint="$1"
-    echo "Sending POST request to ${BASE_URL}/${endpoint}..."
-    curl -s -X POST "${BASE_URL}/${endpoint}" || echo " (Request sent; process may have terminated or timed out)"
+    local secret="${CHAOS_SECRET:-aegis-chaos-shared-secret-key-prod-2026}"
+    echo "Sending authenticated POST request to ${BASE_URL}/${endpoint}..."
+    curl -s -X POST -H "X-Chaos-Secret: ${secret}" "${BASE_URL}/${endpoint}" || echo " (Request sent; process may have terminated or timed out)"
     echo ""
 }
 
