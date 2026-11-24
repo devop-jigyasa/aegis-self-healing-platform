@@ -24,7 +24,7 @@ class AIOpsDiagnosticEngine:
     ) -> Dict[str, Any]:
         """Synthesizes a structured incident post-mortem."""
         incident_id = f"INC-{int(time.time())}"
-        
+
         # Analyze log signatures
         detected_signatures: List[str] = []
         if "MemoryError" in logs or "OOMKilled" in alert_name:
@@ -50,10 +50,10 @@ class AIOpsDiagnosticEngine:
             recommendations.insert(0, "Configure pod termination grace period and ensure graceful SIGTERM handling.")
 
         report_markdown = f"""# SRE Incident Post-Mortem: {incident_id}
-**Alert Triggered:** `{alert_name}`  
-**Affected Resource:** `{namespace}/{resource_name}`  
-**Mean Time to Recovery (MTTR):** `{round(mttr_seconds, 2)}s`  
-**Autonomous Action Executed:** `{remediation_action}`  
+**Alert Triggered:** `{alert_name}`
+**Affected Resource:** `{namespace}/{resource_name}`
+**Mean Time to Recovery (MTTR):** `{round(mttr_seconds, 2)}s`
+**Autonomous Action Executed:** `{remediation_action}`
 
 ---
 

@@ -1,5 +1,6 @@
 # AEGIS Chaos Injection CLI
 param (
+    [Alias("Scenario", "S")]
     [string]$Type = "menu"
 )
 
@@ -32,13 +33,14 @@ function Execute-Chaos($endpoint) {
     }
 }
 
-switch ($Type) {
-    "oom"     { Execute-Chaos "oom?megabytes=120" }
-    "crash"   { Execute-Chaos "crash" }
-    "cpu"     { Execute-Chaos "cpu?duration_sec=15" }
-    "latency" { Execute-Chaos "latency?seconds=2.5" }
-    "errors"  { Execute-Chaos "errors?enable=true" }
-    "reset"   { Execute-Chaos "reset" }
+switch ($Type.ToLower()) {
+    "oom"       { Execute-Chaos "oom?megabytes=120" }
+    "crash"     { Execute-Chaos "crash" }
+    "crashloop" { Execute-Chaos "crash" }
+    "cpu"       { Execute-Chaos "cpu?duration_sec=15" }
+    "latency"   { Execute-Chaos "latency?seconds=2.5" }
+    "errors"    { Execute-Chaos "errors?enable=true" }
+    "reset"     { Execute-Chaos "reset" }
     default {
         $userChoice = Show-Menu
         switch ($userChoice) {

@@ -80,8 +80,8 @@
                         <span class="kpi-title">BENCHMARKED MTTR</span>
                         <span class="kpi-icon">⏱️</span>
                     </div>
-                    <div class="kpi-val mono text-cyan"><span id="mttr-val">24.2</span> <span class="unit">SEC</span></div>
-                    <div class="kpi-sub">Recovery Target: <span class="text-green">&lt; 30s</span> (Manual: 5m+)</div>
+                    <div class="kpi-val mono text-cyan"><span id="mttr-val">--</span> <span class="unit">SEC</span></div>
+                    <div class="kpi-sub">Recovery Target: <span class="text-green">&lt; 30s</span> (Live SRE Benchmark)</div>
                 </div>
             </section>
 
@@ -126,7 +126,7 @@
                             <div class="btn-icon">⏳</div>
                             <div class="btn-meta">
                                 <strong>HTTP Latency Injected</strong>
-                                <span>Add 2.0s delay to requests</span>
+                                <span>Add 2.5s delay to requests</span>
                             </div>
                         </button>
 
@@ -176,7 +176,7 @@
                             <span class="ai-sparkle">✦</span>
                             <h3>AIOps ROOT CAUSE ANALYSIS & DIAGNOSTICS</h3>
                         </div>
-                        <button class="action-btn" onclick="generateAIMockReport()">RUN AI DIAGNOSTICS</button>
+                        <button class="action-btn" onclick="generateAIMockReport()">RUN AI DIAGNOSTICS (DEMO)</button>
                     </div>
 
                     <div class="aiops-output" id="aiops-content">

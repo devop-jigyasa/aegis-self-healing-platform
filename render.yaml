@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: aegis-self-healing-platform
+    env: python
+    buildCommand: "pip install --upgrade pip && pip install -r app/requirements.txt"
+    startCommand: "uvicorn app.main:app --host 0.0.0.0 --port $PORT"
+    plan: free
+    healthCheckPath: /healthz
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.8
+      - key: CHAOS_ENABLED
+        value: "false"

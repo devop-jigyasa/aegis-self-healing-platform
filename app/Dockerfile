@@ -12,7 +12,7 @@ FROM python:3.11-slim AS runner
 WORKDIR /app
 
 # Security: Create unprivileged non-root user (UID 10001)
-RUN groupadd -r aegisgroup && useradd -r -g aegisgroup -u 10001 aegisuser
+RUN groupadd -r aegisgroup && useradd -r -m -g aegisgroup -u 10001 aegisuser
 
 # Copy installed packages from builder
 COPY --from=builder /root/.local /home/aegisuser/.local

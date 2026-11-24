@@ -1,5 +1,5 @@
 # AEGIS Automated Cluster & Platform Provisioner
-$ErrorActionPreference = "Continue"
+$ErrorActionPreference = "Stop"
 
 Write-Host "==========================================================" -ForegroundColor Cyan
 Write-Host "  AEGIS // Autonomous SRE & AIOps Platform Setup" -ForegroundColor Cyan
@@ -37,23 +37,25 @@ if ($clusters -notcontains "aegis-cluster") {
     Write-Host "  Cluster 'aegis-cluster' already exists. Reusing existing cluster." -ForegroundColor Green
 }
 
-# 4. Build Docker images (Fast lightweight build)
+# 4. Build Docker images (Fast lightweight build using repo relative paths)
 Write-Host "[4/6] Building AEGIS microservices..." -ForegroundColor Yellow
-docker build -t aegis-core:latest "D:\aegis-platform\app"
-docker build -t aegis-controller:latest "D:\aegis-platform\controller"
+$repoRoot = (Get-Item $PSScriptRoot).Parent.FullName
+docker build -t aegis-core:1.0.0 -t aegis-core:latest "$repoRoot\app"
+docker build -t aegis-controller:1.0.0 -t aegis-controller:latest "$repoRoot\controller"
 
 # 5. Load images into Kind
 Write-Host "[5/6] Loading images into Kind cluster..." -ForegroundColor Yellow
-& $kindCmd load docker-image aegis-core:latest --name aegis-cluster
-& $kindCmd load docker-image aegis-controller:latest --name aegis-cluster
+& $kindCmd load docker-image aegis-core:1.0.0 --name aegis-cluster
+& $kindCmd load docker-image aegis-controller:1.0.0 --name aegis-cluster
 
-# 6. Apply manifests
-Write-Host "[6/6] Applying Kubernetes manifests & RBAC policies..." -ForegroundColor Yellow
-kubectl apply -f "D:\aegis-platform\k8s\base\namespace.yaml"
-kubectl apply -f "D:\aegis-platform\k8s\base\rbac.yaml"
-kubectl apply -f "D:\aegis-platform\k8s\base\app-deployment.yaml"
-kubectl apply -f "D:\aegis-platform\k8s\base\app-service.yaml"
-kubectl apply -f "D:\aegis-platform\k8s\base\controller-deployment.yaml"
+# 6. Apply manifests & monitoring stack
+Write-Host "[6/6] Applying Kubernetes manifests, RBAC & Monitoring Stack..." -ForegroundColor Yellow
+kubectl apply -f "$repoRoot\k8s\base\namespace.yaml"
+kubectl apply -f "$repoRoot\k8s\base\rbac.yaml"
+kubectl apply -f "$repoRoot\k8s\base\app-deployment.yaml"
+kubectl apply -f "$repoRoot\k8s\base\app-service.yaml"
+kubectl apply -f "$repoRoot\k8s\base\controller-deployment.yaml"
+kubectl apply -f "$repoRoot\k8s\monitoring\monitoring-stack.yaml"
 
 Write-Host "Waiting for deployments to roll out..." -ForegroundColor Yellow
 kubectl rollout status deployment/aegis-core -n production-apps --timeout=90s
@@ -65,4 +67,5 @@ Write-Host "  AEGIS Platform is ONLINE & RUNNING!" -ForegroundColor Green
 Write-Host "  Mission Control UI: http://localhost:8080" -ForegroundColor Cyan
 Write-Host "  Telemetry Metrics:  http://localhost:8080/metrics" -ForegroundColor Cyan
 Write-Host "  Health Probe:       http://localhost:8080/healthz" -ForegroundColor Cyan
+Write-Host "  Controller API:     http://localhost:5000/api/circuit-breaker" -ForegroundColor Cyan
 Write-Host "==========================================================" -ForegroundColor Green

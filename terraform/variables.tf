@@ -27,3 +27,9 @@ variable "node_instance_types" {
   type        = list(string)
   default     = ["t3.medium"]
 }
+
+variable "cluster_endpoint_public_access_cidrs" {
+  description = "Authorized CIDR blocks allowed to connect to the EKS public API endpoint"
+  type        = list(string)
+  default     = ["10.0.0.0/8", "172.16.0.0/12", "192.168.0.0/16"]
+}

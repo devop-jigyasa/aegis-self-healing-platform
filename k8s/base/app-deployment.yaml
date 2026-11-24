@@ -8,6 +8,11 @@ metadata:
     tier: backend
 spec:
   replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
   selector:
     matchLabels:
       app: aegis-core
@@ -27,8 +32,21 @@ spec:
         fsGroup: 10001
       containers:
         - name: aegis-core
-          image: aegis-core:latest
+          image: aegis-core:1.0.0
           imagePullPolicy: IfNotPresent
+          env:
+            - name: CHAOS_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: aegis-secrets
+                  key: CHAOS_SECRET
+                  optional: true
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: false
+            capabilities:
+              drop:
+                - ALL
           ports:
             - containerPort: 8000
               name: http

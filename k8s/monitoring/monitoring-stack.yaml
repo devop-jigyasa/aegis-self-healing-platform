@@ -1,0 +1,133 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: prometheus
+  namespace: aegis-system
+  labels:
+    app: prometheus
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: prometheus
+  template:
+    metadata:
+      labels:
+        app: prometheus
+    spec:
+      containers:
+        - name: prometheus
+          image: prom/prometheus:v2.45.0
+          args:
+            - "--config.file=/etc/prometheus/prometheus.yml"
+            - "--storage.tsdb.path=/prometheus"
+          ports:
+            - containerPort: 9090
+          volumeMounts:
+            - name: prometheus-config-volume
+              mountPath: /etc/prometheus/
+      volumes:
+        - name: prometheus-config-volume
+          configMap:
+            name: prometheus-config
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: prometheus-config
+  namespace: aegis-system
+data:
+  prometheus.yml: |
+    global:
+      scrape_interval: 10s
+      evaluation_interval: 10s
+
+    rule_files:
+      - /etc/prometheus/alert-rules.yaml
+
+    alerting:
+      alertmanagers:
+        - static_configs:
+            - targets: ['alertmanager.aegis-system.svc.cluster.local:9093']
+
+    scrape_configs:
+      - job_name: 'aegis-core'
+        static_configs:
+          - targets: ['aegis-core-service.production-apps.svc.cluster.local:8000']
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: prometheus
+  namespace: aegis-system
+spec:
+  selector:
+    app: prometheus
+  ports:
+    - port: 9090
+      targetPort: 9090
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: alertmanager
+  namespace: aegis-system
+  labels:
+    app: alertmanager
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: alertmanager
+  template:
+    metadata:
+      labels:
+        app: alertmanager
+    spec:
+      containers:
+        - name: alertmanager
+          image: prom/alertmanager:v0.25.0
+          args:
+            - "--config.file=/etc/alertmanager/alertmanager.yml"
+          ports:
+            - containerPort: 9093
+          volumeMounts:
+            - name: alertmanager-config-volume
+              mountPath: /etc/alertmanager/
+      volumes:
+        - name: alertmanager-config-volume
+          configMap:
+            name: alertmanager-config
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: alertmanager-config
+  namespace: aegis-system
+data:
+  alertmanager.yml: |
+    global:
+      resolve_timeout: 1m
+    route:
+      group_by: ['alertname', 'namespace', 'deployment']
+      group_wait: 5s
+      group_interval: 10s
+      repeat_interval: 1h
+      receiver: 'aegis-remediation-webhook'
+    receivers:
+      - name: 'aegis-remediation-webhook'
+        webhook_configs:
+          - url: 'http://aegis-controller.aegis-system.svc.cluster.local:5000/webhook/alert'
+            send_resolved: true
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: alertmanager
+  namespace: aegis-system
+spec:
+  selector:
+    app: alertmanager
+  ports:
+    - port: 9093
+      targetPort: 9093

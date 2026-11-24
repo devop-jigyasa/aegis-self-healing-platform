@@ -32,6 +32,17 @@ spec:
             summary: "AEGIS Container was terminated due to OOMKill"
             description: "Container in pod {{ $labels.pod }} exceeded memory limit."
 
+        - alert: AegisHighCPUUsage
+          expr: aegis_process_cpu_usage_percent{namespace="production-apps"} > 85
+          for: 1m
+          labels:
+            severity: warning
+            deployment: aegis-core
+            namespace: production-apps
+          annotations:
+            summary: "AEGIS CPU Saturation Exceeded 85%"
+            description: "Workload CPU utilization in pod {{ $labels.pod }} sustained above 85% for 1m."
+
         - alert: AegisHighErrorRate
           expr: sum(rate(aegis_http_requests_total{status_code="500"}[2m])) / sum(rate(aegis_http_requests_total[2m])) > 0.05
           for: 1m
